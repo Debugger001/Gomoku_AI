@@ -41,9 +41,6 @@ def eval(node):
     nowBoard = node.board
     shapes = []
 
-    # for i in range(BOARD_SIZE):
-        # for j in range(BOARD_SIZE):
-
     # Lv4 _oooo_
     # Dd4 _oooox, _ooo_ox, xoo_oox
     # Lv3 __ooo__
@@ -56,6 +53,7 @@ def eval(node):
 
     for i in range(BOARD_SIZE):
         for j in range(BOARD_SIZE):
+            # Lv4 _oooo_
             # Lv4 horizontal
             if (nowBoard[i][j] == EMPTY and j+5 < BOARD_SIZE):
                 for n in range(4):
@@ -73,9 +71,78 @@ def eval(node):
                         continue
                     else:
                         break
-                if (n == 3 and nowBoard[i][j+5] == EMPTY):
+                if (n == 3 and nowBoard[i+5][j] == EMPTY):
                     newshape = [[i+1, j], "Lv4", 1]
                     shapes.append(newshape)
+            # Lv4 upperright
+            if (nowBoard[i][j] == EMPTY and i-5>=0 and j+5<BOARD_SIZE):
+                for n in range(4):
+                    if (nowBoard[i-n-1][j+n+1] == ME):
+                        continue
+                    else:
+                        break
+                if (n == 3 and nowBoard[i-5][j+5] == EMPTY):
+                    newshape = [[i-1, j+1], "Lv4", 2]
+                    shapes.append(newshape)
+            # Lv4 downright
+            if (nowBoard[i][j] == EMPTY and i+5<BOARD_SIZE and j+5<BOARD_SIZE):
+                for n in range(4):
+                    if (nowBoard[i+n+1][j+n+1] == ME):
+                        continue
+                    else:
+                        break
+                if (n == 3 and nowBoard[i+5][j+5] == EMPTY):
+                    newshape = [[i+1,j+1], "Lv4", 3]
+                    shapes.append(newshape)
+            # Dd4 _oooox, _ooo_ox, xoo_oox
+            # Dd4a _oooox / xoooo_
+            # Dd4a horizontal
+            if (j+5<BOARD_SIZE):
+                for n in range(4):
+                    if (nowBoard[i][j+n+1] == ME):
+                        continue
+                    else:
+                        break
+                if (n == 3):
+                    if ((nowBoard[i][j] == EMPTY and nowBoard[i][j+5] == OTHER) or (nowBoard[i][j] == OTHER and nowBoard[i][j+5] == EMPTY)):
+                        newshape = [[i, j+1], "Dd4a", 0]
+                        shapes.append(newshape)
+            # Dd4a vertical
+            if (i+5<BOARD_SIZE):
+                for n in range(4):
+                    if (nowBoard[i+n+1][j] == ME):
+                        continue
+                    else:
+                        break
+                if (n == 3):
+                    if ((nowBoard[i][j] == EMPTY and nowBoard[i+5][j] == OTHER) or (nowBoard[i][j] == OTHER and nowBoard[i+5][j] == EMPTY)):
+                        newshape = [[i+1, j], "Dd4a", 1]
+                        shapes.append(newshape)
+            # Dd4a upperright
+            if (i-5>=0 and j+5<BOARD_SIZE):
+                for n in range(4):
+                    if (nowBoard[i-n-1][j+n+1] == ME):
+                        continue
+                    else:
+                        break
+                if (n == 3):
+                    if ((nowBoard[i][j] == EMPTY and nowBoard[i-5][j+5] == OTHER) or (nowBoard[i][j] == OTHER and nowBoard[i-5][j+5] == EMPTY)):
+                        newshape = [[i-1, j+1], "Dd4a", 2]
+                        shapes.append(newshape)
+            # Dd4a downright
+            if (i+5<BOARD_SIZE and j+5<BOARD_SIZE):
+                for n in range(4):
+                    if (nowBoard[i+n+1][j+n+1] == ME):
+                        continue
+                    else:
+                        break
+                if (n == 3):
+                    if ((nowBoard[i][j] == EMPTY and nowBoard[i+5][j+5] == OTHER) or (nowBoard[i][j] == OTHER and nowBoard[i+5][j+5] == EMPTY)):
+                        newshape = [[i+1, j+1], "Dd4a", 3]
+                        shapes.append(newshape)
+            # Dd4b,c _ooo_ox / xooo_o_ , xoo_oox
+
+
 
 
 
