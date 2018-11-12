@@ -28,6 +28,13 @@ class Node(object):
 #         for j in range(BOARD_SIZE):
 
 
+value = {
+"lv4": 10000,
+"Dd4a": 500,
+"Dd4b/c": 500,
+}
+
+
 
 coord = []
 for i in range(BOARD_SIZE):
@@ -38,6 +45,9 @@ for i in range(BOARD_SIZE):
 coord = np.array(coord)
 
 def eval(node):
+    myside = ME
+    opside = OTHER
+    ismyside = True
     nowBoard = node.board
     shapes = []
 
@@ -50,97 +60,192 @@ def eval(node):
     # Direction: 0: horizontal, 1: vertical, 2: upperright, 3: downright
 
     # Shapes are stored in format: [eigencoord, type, direction]
+    for i in range(2):
+        for i in range(BOARD_SIZE):
+            for j in range(BOARD_SIZE):
+                # Lv4, Dd4a _oooo_, _oooox / xoooo_
+                # Lv4, Dd4a horizontal
+                if j+3 < BOARD_SIZE and nowBoard[i][j] == myside:
+                    MEcounter = 0
+                    for n in range(3):
+                        if nowBoard[i][j+n+1] == myside:
+                            MEcounter += 1
+                        else:
+                            break
+                    if MEcounter == 3 and j>0 and nowBoard[i][j-1] == EMPTY and j+4<BOARD_SIZE and nowBoard[i][j+4] == EMPTY:
+                        newshape = [[i, j], "Lv4", 0, ismyside]
+                        shapes.append(newshape)
+                    if MEcounter == 3:
+                        isDb4a = False
+                        if j>0 and nowBoard[i][j-1] == EMPTY and ((j+4<BOARD_SIZE and nowBoard[i][j+4]==opside) or (j+4==BOARD_SIZE)):
+                            isDb4a = True
+                        if j+4<BOARD_SIZE and nowBoard[i][j+4] == EMPTY and ((j>0 and nowBoard[i][j-1]==opside) or (j==0)):
+                            isDb4a = True
+                        if isDb4a:
+                            newshape = [[i, j], "Dd4a", 1, ismyside]
+                            shapes.append(newshape)
+                # Lv4, Dd4a vertical
+                if i+3 < BOARD_SIZE and nowBoard[i][j] == myside:
+                    MEcounter = 0
+                    for n in range(3):
+                        if nowBoard[i+n+1][j] == myside:
+                            MEcounter += 1
+                        else:
+                            break
+                    if MEcounter == 3 and i>0 and nowBoard[i-1][j] == EMPTY and i+4<BOARD_SIZE and nowBoard[i+4][j] == EMPTY:
+                        newshape = [[i, j], "Lv4", 1, ismyside]
+                        shapes.append(newshape)
+                    if MEcounter == 3:
+                        isDb4a = False
+                        if i>0 and nowBoard[i-1][j] == EMPTY and ((i+4<BOARD_SIZE and nowBoard[i+4][j]==opside) or (i+4==BOARD_SIZE)):
+                            isDb4a = True
+                        if i+4<BOARD_SIZE and nowBoard[i+4][j] == EMPTY and ((i>0 and nowBoard[i-1][j]==opside) or (i==0)):
+                            isDb4a = True
+                        if isDb4a:
+                            newshape = [[i, j], "Dd4a", 1, ismyside]
+                            shapes.append(newshape)
+                # Lv4, Dd4a upperright
+                if i-3>=0 and j+3<BOARD_SIZE and nowBoard[i][j] == myside:
+                    MEcounter = 0
+                    for n in range(3):
+                        if nowBoard[i-n-1][j+n+1] == myside:
+                            MEcounter += 1
+                        else:
+                            break
+                    if MEcounter == 3 and i+1<BOARD_SIZE and j>0 and nowBoard[i+1][j-1] == EMPTY and i>3 and j+4<BOARD_SIZE and nowBoard[i-4][j+4] == EMPTY:
+                        newshape = [[i, j], "Lv4", 2, ismyside]
+                        shapes.append(newshape)
+                    if MEcounter == 3:
+                        isDb4a = False
+                        if (i+1==BOARD_SIZE or j==0) and (i==3 or j+4==BOARD_SIZE or (i>3 and j+4<BOARD_SIZE and nowBoard[i-4][j+4]!=myside)):
+                            isDb4a = True
+                        if (i==3 or j+4==BOARD_SIZE) and (i+1<BOARD_SIZE and j>0 and nowBoard[i+1][j-1]!=myside):
+                            isDb4a = True
+                        if (i+1<BOARD_SIZE and j>0 and i>3 and j+4<BOARD_SIZE) and ((nowBoard[i+1][j-1]==opside and nowBoard[i-4][j+4]==EMPTY) or (nowBoard[i+1][j-1]==EMPTY and nowBoard[i-4][j+4]==opside)):
+                            isDb4a = True
+                        if isDb4a:
+                            newshape = [[i, j], "Dd4a", 2, ismyside]
+                            shapes.append(newshape)
+                # Lv4, Dd4a downright
+                if i+3<BOARD_SIZE and j+3<BOARD_SIZE and nowBoard[i][j] == myside:
+                    MEcounter = 0
+                    for n in range(3):
+                        if nowBoard[i+n+1][j+n+1] == myside:
+                            MEcounter += 1
+                        else:
+                            break
+                    if MEcounter == 3 and i>0 and j>0 and nowBoard[i-1][j-1] == EMPTY and i+4<BOARD_SIZE and j+4<BOARD_SIZE and nowBoard[i+4][j+4] == EMPTY:
+                        newshape = [[i,j], "Lv4", 3, ismyside]
+                        shapes.append(newshape)
+                    if MEcounter == 3:
+                        if (nowBoard[i][j] == EMPTY and nowBoard[i+5][j+5] == opside) or (nowBoard[i][j] == opside and nowBoard[i+5][j+5] == EMPTY):
+                            newshape = [[i+1, j+1], "Dd4a", 3, ismyside]
+                            shapes.append(newshape)
+                        isDb4a = False
+                        if (i==0 or j==0) and (i+4==BOARD_SIZE or j+4==BOARD_SIZE or (i+4<BOARD_SIZE and j+4<BOARD_SIZE and nowBoard[i+4][j+4]!=myside)):
+                            isDb4a = True
+                        if (i+4==BOARD_SIZE or j+4==BOARD_SIZE) and (i>0 and j>0 and nowBoard[i-1][j-1]!=myside):
+                            isDb4a = True
+                        if i>0 and j>0 and i+4<BOARD_SIZE and j+4<BOARD_SIZE and ((nowBoard[i-1][j-1]==opside and nowBoard[i+4][j+4]==EMPTY) or (nowBoard[i-1][j-1]==EMPTY and nowBoard[i+4][j+4]==opside)):
+                            isDb4a = True
+                        if isDb4a:
+                            newshape = [[i, j], "Dd4a", 3, ismyside]
+                            shapes.append(newshape)
+                # Dd4b,c ?ooo_ox / xooo_o? , xoo_oo? / ?oo_oox
+                # Dd4b,c horizontal
+                if j+4<BOARD_SIZE and nowBoard[i][j] == myside and nowBoard[i][j+4] == myside:
+                    MEcounter = 0
+                    for n in range(3):
+                        if nowBoard[i][j+n+1] == myside:
+                            MEcounter += 1
+                        elif nowBoard[i][j+n+1] == EMPTY:
+                            continue
+                        else:
+                            MEcounter = 0
+                            break
+                    isDb4bc = False
+                    if MEcounter == 2:
+                        if (j==0 and nowBoard[i][j+5]!=myside) or (j+5==BOARD_SIZE and nowBoard[i][j-1]!=myside):
+                            isDb4bc = True
+                        if (j>0 and j+5<BOARD_SIZE and ((nowBoard[i][j-1]==opside and nowBoard[i][j+5]!=myside) or (nowBoard[i][j-1]!=myside and nowBoard[i][j+5]==opside))):
+                            isDb4bc = True
+                    if isDb4bc:
+                        newshape = [[i,j], "Db4b/c", 0, ismyside]
+                        shapes.append(newshape)
+                # Dd4b,c vertical
+                if i+4<BOARD_SIZE and nowBoard[i][j] == myside and nowBoard[i+4][j] == myside:
+                    MEcounter = 0
+                    for n in range(3):
+                        if nowBoard[i+n+1][j] == myside:
+                            MEcounter += 1
+                        elif nowBoard[i+n+1][j] == EMPTY:
+                            continue
+                        else:
+                            MEcounter = 0
+                            break
+                    isDb4bc = False
+                    if MEcounter == 2:
+                        if (i==0 and nowBoard[i+5][j]==opside) or (i+5==BOARD_SIZE and nowBoard[i-1][j]==opside):
+                            isDb4bc = True
+                        if (i>0 and i+5<BOARD_SIZE and ((nowBoard[i-1][j]==opside and nowBoard[i+5][j]!=myside) or (nowBoard[i-1][j]!=myside and nowBoard[i+5][j]==opside))):
+                            isDb4bc = True
+                    if isDb4bc:
+                        newshape = [[i,j], "Db4b/c", 1, ismyside]
+                        shapes.append(newshape)
+                # Dd4b,c upperright
+                if i-4>=0 and j+4<BOARD_SIZE and nowBoard[i][j] == myside and nowBoard[i-4][j+4] == myside:
+                    MEcounter = 0
+                    for n in range(3):
+                        if nowBoard[i-n-1][j+n+1] == myside:
+                            MEcounter += 1
+                        elif nowBoard[i-n-1][j+n+1] == EMPTY:
+                            continue
+                        else:
+                            MEcounter = 0
+                            break
+                    isDb4bc = False
+                    if MEcounter == 2:
+                        if (i+1==BOARD_SIZE or j==0) and (i==4 or j+5==BOARD_SIZE or (i>4 and j+5<BOARD_SIZE and nowBoard[i-5][j+5]!=myside)):
+                            isDb4bc = True
+                        if (i==4 or j+5==BOARD_SIZE) and (i+1<BOARD_SIZE and j>0 and nowBoard[i+1][j-1]!=myside):
+                            isDb4bc = True
+                        if (i+1<BOARD_SIZE and j>0 and i>4 and j+5<BOARD_SIZE) and ((nowBoard[i+1][j-1]==opside and nowBoard[i-5][j+5]!=myside) or (nowBoard[i+1][j-1]!=myside and nowBoard[i-5][j+5]==opside)):
+                            isDb4bc = True
+                    if isDb4bc:
+                        newshape = [[i,j], "Db4b/c", 2, ismyside]
+                        shapes.append(newshape)
+                # Dd4b,c downright
+                if i+4<BOARD_SIZE and j+4<BOARD_SIZE and nowBoard[i][j] == myside and nowBoard[i+4][j+4] == myside:
+                    MEcounter = 0
+                    for n in range(3):
+                        if nowBoard[i+n+1][j+n+1] == myside:
+                            MEcounter += 1
+                        elif nowBoard[i+n+1][j+n+1] == EMPTY:
+                            continue
+                        else:
+                            MEcounter = 0
+                            break
+                    isDb4bc = False
+                    if MEcounter == 2:
+                        if ((i==0 or j==0) and j+5<BOARD_SIZE and nowBoard[i-5][j+5]==opside) or ((i-4==0 or j+5==BOARD_SIZE) and i+1<BOARD_SIZE and j-1>=0 and nowBoard[i+1][j-1]==opside):
+                            isDb4bc = True
+                        if i+1<BOARD_SIZE and j>0 and i>4 and j+5<BOARD_SIZE and ((nowBoard[i+1][j-1]==opside and nowBoard[i-5][j+5]!=myside) or (nowBoard[i+1][j-1]!=myside and nowBoard[i-5][j+5]==opside)):
+                            isDb4bc = True
+                    if isDb4bc:
+                        newshape = [[i,j], "Db4b/c", 2, ismyside]
+                        shapes.append(newshape)
 
-    for i in range(BOARD_SIZE):
-        for j in range(BOARD_SIZE):
-            # Lv4 _oooo_
-            # Lv4 horizontal
-            if (nowBoard[i][j] == EMPTY and j+5 < BOARD_SIZE):
-                for n in range(4):
-                    if (nowBoard[i][j+n+1] == ME):
-                        continue
-                    else:
-                        break
-                if (n == 3 and nowBoard[i][j+5] == EMPTY):
-                    newshape = [[i, j+1], "Lv4", 0]
-                    shapes.append(newshape)
-            # Lv4 vertical
-            if (nowBoard[i][j] == EMPTY and i+5 < BOARD_SIZE):
-                for n in range(4):
-                    if (nowBoard[i+n+1][j] == ME):
-                        continue
-                    else:
-                        break
-                if (n == 3 and nowBoard[i+5][j] == EMPTY):
-                    newshape = [[i+1, j], "Lv4", 1]
-                    shapes.append(newshape)
-            # Lv4 upperright
-            if (nowBoard[i][j] == EMPTY and i-5>=0 and j+5<BOARD_SIZE):
-                for n in range(4):
-                    if (nowBoard[i-n-1][j+n+1] == ME):
-                        continue
-                    else:
-                        break
-                if (n == 3 and nowBoard[i-5][j+5] == EMPTY):
-                    newshape = [[i-1, j+1], "Lv4", 2]
-                    shapes.append(newshape)
-            # Lv4 downright
-            if (nowBoard[i][j] == EMPTY and i+5<BOARD_SIZE and j+5<BOARD_SIZE):
-                for n in range(4):
-                    if (nowBoard[i+n+1][j+n+1] == ME):
-                        continue
-                    else:
-                        break
-                if (n == 3 and nowBoard[i+5][j+5] == EMPTY):
-                    newshape = [[i+1,j+1], "Lv4", 3]
-                    shapes.append(newshape)
-            # Dd4 _oooox, _ooo_ox, xoo_oox
-            # Dd4a _oooox / xoooo_
-            # Dd4a horizontal
-            if (j+5<BOARD_SIZE):
-                for n in range(4):
-                    if (nowBoard[i][j+n+1] == ME):
-                        continue
-                    else:
-                        break
-                if (n == 3):
-                    if ((nowBoard[i][j] == EMPTY and nowBoard[i][j+5] == OTHER) or (nowBoard[i][j] == OTHER and nowBoard[i][j+5] == EMPTY)):
-                        newshape = [[i, j+1], "Dd4a", 0]
-                        shapes.append(newshape)
-            # Dd4a vertical
-            if (i+5<BOARD_SIZE):
-                for n in range(4):
-                    if (nowBoard[i+n+1][j] == ME):
-                        continue
-                    else:
-                        break
-                if (n == 3):
-                    if ((nowBoard[i][j] == EMPTY and nowBoard[i+5][j] == OTHER) or (nowBoard[i][j] == OTHER and nowBoard[i+5][j] == EMPTY)):
-                        newshape = [[i+1, j], "Dd4a", 1]
-                        shapes.append(newshape)
-            # Dd4a upperright
-            if (i-5>=0 and j+5<BOARD_SIZE):
-                for n in range(4):
-                    if (nowBoard[i-n-1][j+n+1] == ME):
-                        continue
-                    else:
-                        break
-                if (n == 3):
-                    if ((nowBoard[i][j] == EMPTY and nowBoard[i-5][j+5] == OTHER) or (nowBoard[i][j] == OTHER and nowBoard[i-5][j+5] == EMPTY)):
-                        newshape = [[i-1, j+1], "Dd4a", 2]
-                        shapes.append(newshape)
-            # Dd4a downright
-            if (i+5<BOARD_SIZE and j+5<BOARD_SIZE):
-                for n in range(4):
-                    if (nowBoard[i+n+1][j+n+1] == ME):
-                        continue
-                    else:
-                        break
-                if (n == 3):
-                    if ((nowBoard[i][j] == EMPTY and nowBoard[i+5][j+5] == OTHER) or (nowBoard[i][j] == OTHER and nowBoard[i+5][j+5] == EMPTY)):
-                        newshape = [[i+1, j+1], "Dd4a", 3]
-                        shapes.append(newshape)
-            # Dd4b,c _ooo_ox / xooo_o_ , xoo_oox
+
+        myside = OTHER
+        opside = ME
+        ismyside = False
+        eval_value = 0
+        for s in shapes:
+            if s[3]:
+                eval_value += value[s[1]]
+            elif not s[3]:
+                eval_value -= value[s[1]]
+        return eval_value
 
 
 
@@ -171,8 +276,8 @@ def eval(node):
 
 def addChildren(node, depth, maxPlayer):
     if depth is 0 or node is None:
-        if node.parent.move[0] == 1:
-            node.value = 2
+        # if node.parent.move[0] == 1:
+        node.value = eval(node)
         return node
     emptyBoard = np.zeros((BOARD_SIZE, BOARD_SIZE))
     emptyPos = coord[(emptyBoard == node.board)]
@@ -244,7 +349,7 @@ for i in range(3):
         testboard[i][j] = 0
 testnode = Node()
 testnode.board = testboard
-testnode = addChildren(testnode, 4, True)
+testnode = addChildren(testnode, 2, True)
 testnode.Printout()
-alphabeta(testnode, 4, -100000000, 100000000, True)
+alphabeta(testnode, 2, -100000000, 100000000, True)
 testnode.Printout()
