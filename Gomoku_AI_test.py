@@ -1,4 +1,5 @@
 import numpy as np
+from wuzi import *
 BOARD_SIZE = 15
 
 class Node(object):
@@ -43,8 +44,40 @@ def eval(node):
     # for i in range(BOARD_SIZE):
         # for j in range(BOARD_SIZE):
 
-            # Lv4 _oooo_, _oo_oo_, _o_ooo_
-            # horizontal
+    # Lv4 _oooo_
+    # Dd4 _oooox, _ooo_ox, xoo_oox
+    # Lv3 __ooo__
+    # Dd3 xooo__, _o_oo_, xo__oox, xo_o_ox
+    # Lv2 ___oo___, xoo___, __o_o__, _o__o_
+
+    # Direction: 0: horizontal, 1: vertical, 2: upperright, 3: downright
+
+    # Shapes are stored in format: [eigencoord, type, direction]
+
+    for i in range(BOARD_SIZE):
+        for j in range(BOARD_SIZE):
+            # Lv4 horizontal
+            if (nowBoard[i][j] == EMPTY and j+5 < BOARD_SIZE):
+                for n in range(4):
+                    if (nowBoard[i][j+n+1] == ME):
+                        continue
+                    else:
+                        break
+                if (n == 3 and nowBoard[i][j+5] == EMPTY):
+                    newshape = [[i, j+1], "Lv4", 0]
+                    shapes.append(newshape)
+            # Lv4 vertical
+            if (nowBoard[i][j] == EMPTY and i+5 < BOARD_SIZE):
+                for n in range(4):
+                    if (nowBoard[i+n+1][j] == ME):
+                        continue
+                    else:
+                        break
+                if (n == 3 and nowBoard[i][j+5] == EMPTY):
+                    newshape = [[i+1, j], "Lv4", 1]
+                    shapes.append(newshape)
+
+
 
 
 
