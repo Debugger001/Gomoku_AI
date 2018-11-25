@@ -42,9 +42,9 @@ value = {
 
 BOARD_SIZE = 8
 
-nowBoard = [[0,0,2,2,2,1,0,0],
-            [0,1,0,1,1,1,0,0],
-            [0,0,1,1,0,1,0,2],
+nowBoard = [[2,0,2,2,2,1,0,0],
+            [0,1,0,0,1,0,0,0],
+            [0,0,1,0,0,1,0,2],
             [0,0,1,0,2,0,2,2],
             [2,0,0,2,2,1,0,2],
             [0,0,1,0,2,2,2,1],
@@ -382,6 +382,7 @@ def eval(node):
                 if nowBoard[i][j]==myside and (i+3<BOARD_SIZE and j+3<BOARD_SIZE and nowBoard[i+3][j+3]==myside):
                     if (nowBoard[i+1][j+1]==myside and nowBoard[i+2][j+2]==EMPTY) or (nowBoard[i+1][j+1]==EMPTY and nowBoard[i+2][j+2]==myside):
                         emptycnt = 0
+                        isrepeat = False
                         if i-1<BOARD_SIZE and j-1>=0:
                             if nowBoard[i-1][j-1]==myside:
                                 isrepeat = True
