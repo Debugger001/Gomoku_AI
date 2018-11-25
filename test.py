@@ -1,6 +1,75 @@
 import numpy as np
-from wuzi import *
-BOARD_SIZE = 15
+import cv2
+from PIL import Image
+import os
+# coord = []
+# for i in range(480):
+#     temp = []
+#     for j in range(640):
+#         temp.append([i,j])
+#     temp = np.array(temp)
+#     coord.append(temp)
+# coord = np.array(coord)
+#
+# img = cv2.imread('/Users/pro/Desktop/0054-001749-label.png', cv2.IMREAD_GRAYSCALE)
+#
+# gray_value = []
+#
+# for i in range(480):
+#     for j in range(640):
+#         if img[i][j] not in gray_value:
+#             gray_value.append(img[i][j])
+#
+# thisgray = np.zeros((480,640), dtype=np.uint8)
+# thisgray.fill(0)
+# print(thisgray)
+# pixels = coord[thisgray == img]
+#
+# print(pixels)
+
+# emptyBoard = np.zeros((5, 5))
+# print(emptyBoard)
+
+# img_path = '/Users/pro/Desktop/Lab/Syndata/syndata-generation-11-3/crop_N5_348.jpg'
+# img = cv2.imread(img_path)
+# mask = np.zeros((img.shape[0], img.shape[1]))
+# mask.fill(1)
+# for i in range(len(img)):
+    # for j in range(len(img[0])):
+        # if img[i][j][0] > 0:
+            # mask[i][j] = 0
+# img = cv2.resize(img,(int(img.shape[1]/2), int(img.shape[0]/2)))
+
+# cv2.imwrite('test.png', img)
+
+
+# a = cv2.imread("/Users/pro/desktop/test.png")
+# print(a.shape)
+# b = a[:,100:150]
+# print(b.shape)
+# cv2.imwrite("testout.png", b)
+
+# l = os.listdir("/Users/pro/Desktop/")
+# print(l)
+
+BOARD_SIZE = 8
+
+nowBoard = [[0,0,2,2,2,1,0,0],
+            [0,1,0,1,1,1,0,0],
+            [0,0,1,1,0,0,0,0],
+            [0,0,1,0,0,0,0,0],
+            [2,0,0,0,0,1,0,0],
+            [0,0,0,0,0,2,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0]]
+
+shapes = []
+
+EMPTY = 0
+
+ME = 1
+
+OTHER = 2
 
 class Node(object):
 
@@ -21,6 +90,13 @@ class Node(object):
         for child in self.children:
             child.Printout(depth + 1)
 
+coord = []
+for i in range(BOARD_SIZE):
+    temp = []
+    for j in range(BOARD_SIZE):
+        temp.append([i,j])
+    coord.append(temp)
+coord = np.array(coord)
 
 #
 # def Game_tree(board):
@@ -29,37 +105,17 @@ class Node(object):
 
 
 value = {
-"FIVE": 10000000,
 "Lv4": 10000,
 "Dd4a": 500,
 "Dd4b/c": 500,
 "Lv3": 300,
-"Dd3a0": 50,
-"Dd3a1": 50,
-"Dd3b": 50,
-"Dd3c/d": 50,
+"Dd3a0": 100,
+"Dd3a1": 100,
+"Dd3b": 100,
+"Dd3cd": 50,
 }
 
-BOARD_SIZE = 8
 
-nowBoard = [[0,0,2,2,2,1,0,0],
-            [0,1,0,1,1,1,0,0],
-            [0,0,1,1,0,1,0,2],
-            [0,0,1,0,2,0,2,2],
-            [2,0,0,2,2,1,0,2],
-            [0,0,1,0,2,2,2,1],
-            [0,1,0,1,1,2,0,0],
-            [0,0,0,2,0,0,0,0]]
-
-
-
-coord = []
-for i in range(BOARD_SIZE):
-    temp = []
-    for j in range(BOARD_SIZE):
-        temp.append([i,j])
-    coord.append(temp)
-coord = np.array(coord)
 
 def eval(node):
     myside = ME
@@ -80,20 +136,6 @@ def eval(node):
     for i in range(2):
         for i in range(BOARD_SIZE):
             for j in range(BOARD_SIZE):
-                # FIVE ooooo
-                # FIVE horizontal
-                if nowBoard[i][j]==myside and j+4<BOARD_SIZE and nowBoard[i][j+1]==myside and nowBoard[i][j+2]==myside and nowBoard[i][j+3]==myside and nowBoard[i][j+4]==myside:
-                    newshape = [[i,j], "FIVE", 0, ismyside]
-                    shapes.append(newshape)
-                if nowBoard[i][j]==myside and i+4<BOARD_SIZE and nowBoard[i+1][j]==myside and nowBoard[i+2][j]==myside and nowBoard[i+3][j]==myside and nowBoard[i+4][j]==myside:
-                    newshape = [[i,j], "FIVE", 1, ismyside]
-                    shapes.append(newshape)
-                if nowBoard[i][j]==myside and i-4>=0 and j+4<BOARD_SIZE and nowBoard[i-1][j+1]==myside and nowBoard[i-2][j+2]==myside and nowBoard[i-3][j+3]==myside and nowBoard[i-4][j+4]==myside:
-                    newshape = [[i,j], "FIVE", 2, ismyside]
-                    shapes.append(newshape)
-                if nowBoard[i][j]==myside and i+4<BOARD_SIZE and j+4<BOARD_SIZE and nowBoard[i+1][j+1]==myside and nowBoard[i+2][j+2]==myside and nowBoard[i+3][j+3]==myside and nowBoard[i+4][j+4]==myside:
-                    newshape = [[i,j], "FIVE", 3, ismyside]
-                    shapes.append(newshape)
                 # Lv4, Dd4a _oooo_, _oooox / xoooo_
                 # Lv4, Dd4a horizontal
                 if j+3 < BOARD_SIZE and nowBoard[i][j] == myside:
@@ -182,7 +224,7 @@ def eval(node):
                         if isDd4a:
                             newshape = [[i, j], "Dd4a", 3, ismyside]
                             shapes.append(newshape)
-                # Dd4b,c ?ooo_o？ / ?ooo_o? , ?oo_oo? / ?oo_oo？
+                # Dd4b,c ?ooo_ox / xooo_o? , xoo_oo? / ?oo_oox
                 # Dd4b,c horizontal
                 if j+4<BOARD_SIZE and nowBoard[i][j] == myside and nowBoard[i][j+4] == myside:
                     MEcounter = 0
@@ -198,7 +240,7 @@ def eval(node):
                     if MEcounter == 2:
                         if (j==0 and nowBoard[i][j+5]!=myside) or (j+5==BOARD_SIZE and nowBoard[i][j-1]!=myside):
                             isDd4bc = True
-                        if (j>0 and j+5<BOARD_SIZE and (nowBoard[i][j-1]!=myside and nowBoard[i][j+5]!=myside)):
+                        if (j>0 and j+5<BOARD_SIZE and ((nowBoard[i][j-1]==opside and nowBoard[i][j+5]!=myside) or (nowBoard[i][j-1]!=myside and nowBoard[i][j+5]==opside))):
                             isDd4bc = True
                     if isDd4bc:
                         newshape = [[i,j], "Dd4b/c", 0, ismyside]
@@ -216,9 +258,9 @@ def eval(node):
                             break
                     isDd4bc = False
                     if MEcounter == 2:
-                        if (i==0 and nowBoard[i+5][j]!=myside) or (i+5==BOARD_SIZE and nowBoard[i-1][j]!=myside):
+                        if (i==0 and nowBoard[i+5][j]==opside) or (i+5==BOARD_SIZE and nowBoard[i-1][j]==opside):
                             isDd4bc = True
-                        if (i>0 and i+5<BOARD_SIZE and (nowBoard[i-1][j]!=myside and nowBoard[i+5][j]!=myside)):
+                        if (i>0 and i+5<BOARD_SIZE and ((nowBoard[i-1][j]==opside and nowBoard[i+5][j]!=myside) or (nowBoard[i-1][j]!=myside and nowBoard[i+5][j]==opside))):
                             isDd4bc = True
                     if isDd4bc:
                         newshape = [[i,j], "Dd4b/c", 1, ismyside]
@@ -240,7 +282,7 @@ def eval(node):
                             isDd4bc = True
                         if (i==4 or j+5==BOARD_SIZE) and (i+1<BOARD_SIZE and j>0 and nowBoard[i+1][j-1]!=myside):
                             isDd4bc = True
-                        if (i+1<BOARD_SIZE and j>0 and i>4 and j+5<BOARD_SIZE) and (nowBoard[i+1][j-1]!=myside and nowBoard[i-5][j+5]!=myside):
+                        if (i+1<BOARD_SIZE and j>0 and i>4 and j+5<BOARD_SIZE) and ((nowBoard[i+1][j-1]==opside and nowBoard[i-5][j+5]!=myside) or (nowBoard[i+1][j-1]!=myside and nowBoard[i-5][j+5]==opside)):
                             isDd4bc = True
                     if isDd4bc:
                         newshape = [[i,j], "Dd4b/c", 2, ismyside]
@@ -258,9 +300,9 @@ def eval(node):
                             break
                     isDd4bc = False
                     if MEcounter == 2:
-                        if ((i==0 or j==0) and j+5<BOARD_SIZE and nowBoard[i-5][j+5]!=myside) or ((i-4==0 or j+5==BOARD_SIZE) and i+1<BOARD_SIZE and j-1>=0 and nowBoard[i+1][j-1]!=myside):
+                        if ((i==0 or j==0) and j+5<BOARD_SIZE and nowBoard[i-5][j+5]==opside) or ((i-4==0 or j+5==BOARD_SIZE) and i+1<BOARD_SIZE and j-1>=0 and nowBoard[i+1][j-1]==opside):
                             isDd4bc = True
-                        if i+1<BOARD_SIZE and j>0 and i>4 and j+5<BOARD_SIZE and (nowBoard[i+1][j-1]!=myside and nowBoard[i-5][j+5]!=myside):
+                        if i+1<BOARD_SIZE and j>0 and i>4 and j+5<BOARD_SIZE and ((nowBoard[i+1][j-1]==opside and nowBoard[i-5][j+5]!=myside) or (nowBoard[i+1][j-1]!=myside and nowBoard[i-5][j+5]==opside)):
                             isDd4bc = True
                     if isDd4bc:
                         newshape = [[i,j], "Dd4b/c", 2, ismyside]
@@ -328,71 +370,44 @@ def eval(node):
                 if nowBoard[i][j]==myside and (j+3<BOARD_SIZE and nowBoard[i][j+3]==myside):
                     if (nowBoard[i][j+1]==myside and nowBoard[i][j+2]==EMPTY) or (nowBoard[i][j+1]==EMPTY and nowBoard[i][j+2]==myside):
                         emptycnt = 0
-                        isrepeat = False
-                        if j-1>=0:
-                            if nowBoard[i][j-1]==myside:
-                                isrepeat = True
-                            if nowBoard[i][j-1]==EMPTY:
-                                emptycnt += 1
-                        if j+4<BOARD_SIZE:
-                            if nowBoard[i][j+4]==myside:
-                                isrepeat = True
-                            if nowBoard[i][j+4]==EMPTY:
-                                emptycnt += 1
-                        if emptycnt >= 1 and (not isrepeat):
+                        if (j-1>=0 and nowBoard[i][j-1]==EMPTY):
+                            emptycnt += 1
+                        if (j+4<BOARD_SIZE and nowBoard[i][j+4]==EMPTY):
+                            emptycnt += 1
+                        if emptycnt >= 1:
                             newshape = [[i,j], "Dd3b", 0, ismyside]
                             shapes.append(newshape)
                 # Dd3b vertical
                 if nowBoard[i][j]==myside and (i+3<BOARD_SIZE and nowBoard[i+3][j]==myside):
                     if (nowBoard[i+1][j]==myside and nowBoard[i+2][j]==EMPTY) or (nowBoard[i+1][j]==EMPTY and nowBoard[i+2][j]==myside):
                         emptycnt = 0
-                        isrepeat = False
-                        if i-1>=0:
-                            if nowBoard[i-1][j]==myside:
-                                isrepeat = True
-                            if nowBoard[i-1][j]==EMPTY:
-                                emptycnt += 1
-                        if i+4<BOARD_SIZE:
-                            if nowBoard[i+4][j]==myside:
-                                isrepeat = True
-                            if nowBoard[i+4][j]==EMPTY:
-                                emptycnt += 1
-                        if emptycnt >= 1 and (not isrepeat):
+                        if (i-1>=0 and nowBoard[i-1][j]==EMPTY):
+                            emptycnt += 1
+                        if (i+4<BOARD_SIZE and nowBoard[i+4][j]==EMPTY):
+                            emptycnt += 1
+                        if emptycnt >= 1:
                             newshape = [[i,j], "Dd3b", 1, ismyside]
                             shapes.append(newshape)
                 # Dd3b upperright
                 if nowBoard[i][j]==myside and (i-3>=0 and j+3<BOARD_SIZE and nowBoard[i-3][j+3]==myside):
                     if (nowBoard[i-1][j+1]==myside and nowBoard[i-2][j+2]==EMPTY) or (nowBoard[i-1][j+1]==EMPTY and nowBoard[i-2][j+2]==myside):
                         emptycnt = 0
-                        isrepeat = False
-                        if i+1<BOARD_SIZE and j-1>=0:
-                            if nowBoard[i+1][j-1]==myside:
-                                isrepeat = True
-                            if nowBoard[i+1][j-1]==EMPTY:
-                                emptycnt += 1
-                        if i-4>=0 and j+4<BOARD_SIZE:
-                            if nowBoard[i-4][j+4]==myside:
-                                isrepeat = True
-                            if nowBoard[i-4][j+4]==EMPTY:
-                                emptycnt += 1
-                        if emptycnt >= 1 and (not isrepeat):
+                        if (i+1<BOARD_SIZE and j-1>=0 and nowBoard[i+1][j-1]==EMPTY):
+                            emptycnt += 1
+                        if (i-4>=0 and j+4<BOARD_SIZE and nowBoard[i-4][j+4]==EMPTY):
+                            emptycnt += 1
+                        if emptycnt >= 1:
                             newshape = [[i,j], "Dd3b", 2, ismyside]
                             shapes.append(newshape)
                 # Dd3b downright
                 if nowBoard[i][j]==myside and (i+3<BOARD_SIZE and j+3<BOARD_SIZE and nowBoard[i+3][j+3]==myside):
                     if (nowBoard[i+1][j+1]==myside and nowBoard[i+2][j+2]==EMPTY) or (nowBoard[i+1][j+1]==EMPTY and nowBoard[i+2][j+2]==myside):
                         emptycnt = 0
-                        if i-1<BOARD_SIZE and j-1>=0:
-                            if nowBoard[i-1][j-1]==myside:
-                                isrepeat = True
-                            if nowBoard[i-1][j-1]==EMPTY:
-                                emptycnt += 1
-                        if i+4<BOARD_SIZE and j+4<BOARD_SIZE:
-                            if nowBoard[i+4][j+4]==myside:
-                                isrepeat = True
-                            if nowBoard[i+4][j+4]==EMPTY:
-                                emptycnt += 1
-                        if emptycnt >= 1 and (not isrepeat):
+                        if (i-1<BOARD_SIZE and j-1>=0 and nowBoard[i-1][j-1]==EMPTY):
+                            emptycnt += 1
+                        if (i+4>=0 and j+4<BOARD_SIZE and nowBoard[i+4][j+4]==EMPTY):
+                            emptycnt += 1
+                        if emptycnt >= 1:
                             newshape = [[i,j], "Dd3b", 3, ismyside]
                             shapes.append(newshape)
                 # Dd3cd xo__oox / xoo__ox / xo_o_ox
@@ -405,9 +420,9 @@ def eval(node):
                         mycnt += 1
                     if nowBoard[i][j+3]==myside:
                         mycnt += 1
-                    if mycnt == 1 and nowBoard[i][j+1]!=opside and nowBoard[i][j+2]!=opside and nowBoard[i][j+3]!=opside:
+                    if mycnt == 1:
                         if (j==0 or (j>0 and nowBoard[i][j-1]==opside)) and (j+5==BOARD_SIZE or (j+5<BOARD_SIZE and nowBoard[i][j+5]==opside)):
-                            newshape = [[i,j], "Dd3c/d", 0, ismyside]
+                            newshape = [[i,j], "Dd3cd", 0, ismyside]
                             shapes.append(newshape)
                 # Dd3cd vertical
                 if nowBoard[i][j]==myside and (i+4<BOARD_SIZE and nowBoard[i+4][j]==myside):
@@ -418,9 +433,9 @@ def eval(node):
                         mycnt += 1
                     if nowBoard[i+3][j]==myside:
                         mycnt += 1
-                    if mycnt == 1 and nowBoard[i+1][j]!=opside and nowBoard[i+2][j]!=opside and nowBoard[i+3][j]!=opside:
+                    if mycnt == 1:
                         if (i==0 or (i>0 and nowBoard[i-1][j]==opside)) and (i+5==BOARD_SIZE or (i+5<BOARD_SIZE and nowBoard[i+5][j]==opside)):
-                            newshape = [[i,j], "Dd3c/d", 1, ismyside]
+                            newshape = [[i,j], "Dd3cd", 1, ismyside]
                             shapes.append(newshape)
                 # Dd3cd upperright
                 if nowBoard[i][j]==myside and (i-4>=0 and j+4<BOARD_SIZE and nowBoard[i-4][j+4]==myside):
@@ -431,10 +446,10 @@ def eval(node):
                         mycnt += 1
                     if nowBoard[i-3][j+3]==myside:
                         mycnt += 1
-                    if mycnt == 1 and nowBoard[i-1][j+1]!=opside and nowBoard[i-2][j+2]!=opside and nowBoard[i-3][j+3]!=opside:
+                    if mycnt == 1:
                         if (i+1==BOARD_SIZE or j==0 or (i+1<BOARD_SIZE and j>0 and nowBoard[i+1][j-1]==opside)):
                             if (i-5<0 or j+5==BOARD_SIZE or (i-5>=0 and j+5<BOARD_SIZE and nowBoard[i-5][j+5]==opside)):
-                                newshape = [[i,j], "Dd3c/d", 2, ismyside]
+                                newshape = [[i,j], "Dd3cd", 2, ismyside]
                                 shapes.append(newshape)
                 # Dd3cd downright
                 if nowBoard[i][j]==myside and (i+4<BOARD_SIZE and j+4<BOARD_SIZE and nowBoard[i+4][j+4]==myside):
@@ -445,40 +460,29 @@ def eval(node):
                         mycnt += 1
                     if nowBoard[i+3][j+3]==myside:
                         mycnt += 1
-                    if mycnt == 1 and nowBoard[i+1][j+1]!=opside and nowBoard[i+2][j+2]!=opside and nowBoard[i+3][j+3]!=opside:
+                    if mycnt == 1:
                         if (i==0 or j==0 or (i>0 and j>0 and nowBoard[i-1][j-1]==opside)):
                             if (i+5==BOARD_SIZE or j+5==BOARD_SIZE or (i+5<BOARD_SIZE and j+5<BOARD_SIZE and nowBoard[i+5][j+5]==opside)):
-                                newshape = [[i,j], "Dd3c/d", 3, ismyside]
+                                newshape = [[i,j], "Dd3cd", 3, ismyside]
                                 shapes.append(newshape)
-
-
-
-
-
 
 
         myside = OTHER
         opside = ME
         ismyside = False
         eval_value = 0
+        print(shapes)
+        for s in shapes:
+            if s[3]:
+                eval_value += value[s[1]]
+            elif not s[3]:
+                eval_value -= value[s[1]]
+        for i in range(BOARD_SIZE):
+            print(nowBoard[i])
 
 
-    print(shapes)
-    for s in shapes:
-        if s[3]:
-            eval_value += value[s[1]]
-        elif not s[3]:
-            eval_value -= value[s[1]]
-    for i in range(BOARD_SIZE):
-        print(nowBoard[i])
+        return eval_value
 
-
-    for s in shapes:
-        if s[3]:
-            eval_value += value[s[1]]
-        elif not s[3]:
-            eval_value -= value[s[1]]
-    return eval_value
 
 def addChildren(node, depth, maxPlayer):
     if depth is 0 or node is None:
@@ -525,15 +529,6 @@ def alphabeta(node, depth, alpha, beta, maxPlayer):
                 break
         return v
 
-def decision(node):
-    node = addChildren(node, 2, True)
-    alphabeta(node, 2, -1000000000, 1000000000, True)
-    maxmovevalue = max([i.value for i in node.children])
-    for child in node.children:
-        if child.value == maxmovevalue:
-            maxmove = child.move
-    return maxmove
-
 # node1 = Node()
 # node2 = Node()
 # node2.Childof(node1)
@@ -560,17 +555,14 @@ def decision(node):
 # testboard = np.zeros((BOARD_SIZE, BOARD_SIZE))
 # testboard.fill(1)
 # for i in range(3):
-#     for j in range(2):
-#         testboard[i][j] = 0
-# testnode = Node()
-# testnode.board = testboard
-# testnode = addChildren(testnode, 2, True)
-# testnode.Printout()
-# alphabeta(testnode, 2, -100000000, 100000000, True)
-# testnode.Printout()
-
+    # for j in range(2):
+        # testboard[i][j] = 0
 testnode = Node()
 # testnode.board = testboard
 testnode.board = nowBoard
-# eval(testnode)
-print("Best move:" + str(decision(testnode)))
+eval(testnode)
+# testnode = addChildren(testnode, 2, True)
+
+# testnode.Printout()
+# alphabeta(testnode, 2, -100000000, 100000000, True)
+# testnode.Printout()
