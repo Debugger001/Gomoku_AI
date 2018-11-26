@@ -28,6 +28,34 @@ class Node(object):
 #         for j in range(BOARD_SIZE):
 
 
+myvalue_1 = {
+"FIVE": 10000000,
+"Lv4": 100000,
+"Dd4a": 500,
+"Dd4b/c": 500,
+"Lv3": 300,
+"Dd3a0": 20,
+"Dd3a1": 20,
+"Dd3b": 20,
+"Dd3c/d": 20,
+"Lv2": 10,
+"Dd2a": 1,
+}
+
+opvalue_1 = {
+"FIVE": 10000000,
+"Lv4": 1000000,
+"Dd4a": 1000000,
+"Dd4b/c": 1000000,
+"Lv3": 10000,
+"Dd3a0": 100,
+"Dd3a1": 100,
+"Dd3b": 100,
+"Dd3c/d": 100,
+"Lv2": 100,
+"Dd2a": 10,
+}
+
 myvalue = {
 "FIVE": 10000000,
 "Lv4": 10000,
@@ -38,7 +66,7 @@ myvalue = {
 "Dd3a1": 50,
 "Dd3b": 50,
 "Dd3c/d": 50,
-"Lv2": 30,
+"Lv2": 10,
 "Dd2a": 1,
 }
 
@@ -52,7 +80,7 @@ opvalue = {
 "Dd3a1": 50,
 "Dd3b": 50,
 "Dd3c/d": 50,
-"Lv2": 30,
+"Lv2": 10,
 "Dd2a": 1,
 }
 
@@ -567,9 +595,9 @@ def eval(node):
     # print(shapes)
     for s in shapes:
         if s[3]:
-            eval_value += myvalue[s[1]]
+            eval_value += myvalue_1[s[1]]
         elif not s[3]:
-            eval_value -= opvalue[s[1]]
+            eval_value -= opvalue_1[s[1]]
     # for i in range(BOARD_SIZE):
         # print(nowBoard[i])
     return eval_value
@@ -580,7 +608,8 @@ def addChildren(node, depth, maxPlayer):
         node.value = eval(node)
         return node
     # print(emptyPos)
-    emptyPos = prune(node)
+    emptyBoard = np.zeros((BOARD_SIZE, BOARD_SIZE))
+    emptyPos = coord[(emptyBoard == node.board)]
     for pos in emptyPos:
         # print(depth)
         # print(pos)
@@ -618,46 +647,13 @@ def alphabeta(node, depth, alpha, beta, maxPlayer):
                 break
         return v
 
-def prune(node):
-    myBoard = np.zeros((BOARD_SIZE, BOARD_SIZE))
-    myBoard.fill(1)
-    myPos = coord[(myBoard == node.board)]
-    myx = [i[0] for i in myPos]
-    myy = [i[1] for i in myPos]
-    opBoard = np.zeros((BOARD_SIZE, BOARD_SIZE))
-    opBoard.fill(2)
-    opPos = coord[(opBoard == node.board)]
-    opx = [i[0] for i in opPos]
-    opy = [i[1] for i in opPos]
-    minx, miny, maxx, maxy = min(myx+opx), min(myy+opy), max(myx+opx), max(myy+opy)
-    if minx >= 3:
-        minx = minx - 3
-    else:
-        minx = 0
-    if miny >= 3:
-        miny = miny -3
-    else:
-        miny = 0
-    if maxx < BOARD_SIZE - 3:
-        maxx = maxx + 3
-    else:
-        maxx = BOARD_SIZE - 1
-    if maxy < BOARD_SIZE - 3:
-        maxy = maxy + 3
-    else:
-        maxy = BOARD_SIZE - 1
-    InRange = lambda pos: (pos[0]>=minx and pos[0]<=maxx and pos[1]>=miny and pos[1]<=maxy)
+def decision(node):
     emptyBoard = np.zeros((BOARD_SIZE, BOARD_SIZE))
     emptyPos = coord[(emptyBoard == node.board)]
-    emptyPos = list(filter(InRange, emptyPos))
-    return emptyPos
-
-def decision(node):
-    emptyPos = prune(node)
     depth = 1
-    if len(emptyPos) <= 50:
+    if len(emptyPos) <= 60:
         depth = 2
-    if len(emptyPos) <= 15:
+    if len(emptyPos) <= 35:
         depth = 3
     node = addChildren(node, depth, True)
     alphabeta(node, depth, -1000000000, 1000000000, True)
@@ -705,7 +701,7 @@ def decision(node):
 
 testnode = Node()
 # testnode.board = testboard
-# testnode.board = nowBoard
-testnode.board = emptyBoard
+testnode.board = nowBoard
+# testnode.board = emptyBoard
 # eval(testnode)
 print("Best move:" + str(decision(testnode)))

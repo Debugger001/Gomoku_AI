@@ -13,7 +13,35 @@ EMPTY = 0
 ME = 1
 OTHER = 2
 
-value = {
+myvalue_1 = {
+"FIVE": 10000000,
+"Lv4": 100000,
+"Dd4a": 500,
+"Dd4b/c": 500,
+"Lv3": 300,
+"Dd3a0": 20,
+"Dd3a1": 20,
+"Dd3b": 20,
+"Dd3c/d": 20,
+"Lv2": 10,
+"Dd2a": 1,
+}
+
+opvalue_1 = {
+"FIVE": 10000000,
+"Lv4": 1000000,
+"Dd4a": 1000000,
+"Dd4b/c": 1000000,
+"Lv3": 10000,
+"Dd3a0": 100,
+"Dd3a1": 100,
+"Dd3b": 100,
+"Dd3c/d": 100,
+"Lv2": 100,
+"Dd2a": 10,
+}
+
+myvalue = {
 "FIVE": 10000000,
 "Lv4": 10000,
 "Dd4a": 500,
@@ -23,6 +51,22 @@ value = {
 "Dd3a1": 50,
 "Dd3b": 50,
 "Dd3c/d": 50,
+"Lv2": 10,
+"Dd2a": 1,
+}
+
+opvalue = {
+"FIVE": 10000000,
+"Lv4": 10000,
+"Dd4a": 500,
+"Dd4b/c": 500,
+"Lv3": 300,
+"Dd3a0": 50,
+"Dd3a1": 50,
+"Dd3b": 50,
+"Dd3c/d": 50,
+"Lv2": 10,
+"Dd2a": 1,
 }
 
 coord = []
@@ -80,7 +124,7 @@ class AI:
         bestmovex, bestmovey = self.decision(CurrNode)
         return bestmovex, bestmovey
 
-    def eval(self, node):
+    def eval(self, node, depth):
         myside = ME
         opside = OTHER
         ismyside = True
@@ -560,15 +604,21 @@ class AI:
             # print(nowBoard[i])
         for s in shapes:
             if s[3]:
-                eval_value += value[s[1]]
+                if depth <= 1:
+                    eval_value += myvalue_1[s[1]]
+                else:
+                    eval_value += myvalue[s[1]]
             elif not s[3]:
-                eval_value -= value[s[1]]
+                if depth <= 1:
+                    eval_value -= opvalue_1[s[1]]
+                else:
+                    eval_value -= opvalue[s[1]]
         return eval_value
 
     def addChildren(self, node, depth, maxPlayer):
         if depth is 0 or node is None:
             # if node.parent.move[0] == 1:
-            node.value = self.eval(node)
+            node.value = self.eval(node, depth)
             return node
         emptyBoard = np.zeros((BOARD_SIZE, BOARD_SIZE))
         emptyPos = coord[(emptyBoard == node.board)]
@@ -611,8 +661,15 @@ class AI:
             return v
 
     def decision(self, node):
-        node = self.addChildren(node, 1, True)
-        self.alphabeta(node, 1, -1000000000, 1000000000, True)
+        emptyBoard = np.zeros((BOARD_SIZE, BOARD_SIZE))
+        emptyPos = coord[(emptyBoard == node.board)]
+        depth = 1
+        if len(emptyPos) <= 60:
+            depth = 2
+        if len(emptyPos) <= 35:
+            depth = 3
+        node = self.addChildren(node, depth, True)
+        self.alphabeta(node, depth, -1000000000, 1000000000, True)
         maxmovevalue = max([i.value for i in node.children])
         for child in node.children:
             if child.value == maxmovevalue:
