@@ -124,7 +124,7 @@ class AI:
         bestmovex, bestmovey = self.decision(CurrNode)
         return bestmovex, bestmovey
 
-    def eval(self, node, depth):
+    def eval(self, node, maxdepth):
         myside = ME
         opside = OTHER
         ismyside = True
@@ -604,21 +604,21 @@ class AI:
             # print(nowBoard[i])
         for s in shapes:
             if s[3]:
-                if depth <= 1:
+                if maxdepth % 2 == 1:
                     eval_value += myvalue_1[s[1]]
                 else:
                     eval_value += myvalue[s[1]]
             elif not s[3]:
-                if depth <= 1:
+                if maxdepth % 2 == 1:
                     eval_value -= opvalue_1[s[1]]
                 else:
                     eval_value -= opvalue[s[1]]
         return eval_value
 
-    def addChildren(self, node, depth, maxPlayer):
+    def addChildren(self, node, depth, maxdepth, maxPlayer):
         if depth is 0 or node is None:
             # if node.parent.move[0] == 1:
-            node.value = self.eval(node, depth)
+            node.value = self.eval(node, maxdepth)
             return node
         emptyBoard = np.zeros((BOARD_SIZE, BOARD_SIZE))
         emptyPos = coord[(emptyBoard == node.board)]
@@ -633,9 +633,9 @@ class AI:
             newNode.board = nowBoard
             newNode.Childof(node)
             if maxPlayer:
-                self.addChildren(newNode, depth - 1, False)
+                self.addChildren(newNode, depth - 1, maxdepth, False)
             else:
-                self.addChildren(newNode, depth - 1, True)
+                self.addChildren(newNode, depth - 1, maxdepth, True)
         return node
 
     def alphabeta(self, node, depth, alpha, beta, maxPlayer):
@@ -668,7 +668,7 @@ class AI:
             depth = 2
         if len(emptyPos) <= 35:
             depth = 3
-        node = self.addChildren(node, depth, True)
+        node = self.addChildren(node, depth, depth, True)
         self.alphabeta(node, depth, -1000000000, 1000000000, True)
         maxmovevalue = max([i.value for i in node.children])
         for child in node.children:
