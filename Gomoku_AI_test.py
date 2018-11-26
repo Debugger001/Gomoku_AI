@@ -28,7 +28,7 @@ class Node(object):
 #         for j in range(BOARD_SIZE):
 
 
-value = {
+myvalue = {
 "FIVE": 10000000,
 "Lv4": 10000,
 "Dd4a": 500,
@@ -38,9 +38,25 @@ value = {
 "Dd3a1": 50,
 "Dd3b": 50,
 "Dd3c/d": 50,
+"Lv2": 30,
+"Dd2a": 1,
 }
 
-BOARD_SIZE = 8
+opvalue = {
+"FIVE": 10000000,
+"Lv4": 10000,
+"Dd4a": 500,
+"Dd4b/c": 500,
+"Lv3": 300,
+"Dd3a0": 50,
+"Dd3a1": 50,
+"Dd3b": 50,
+"Dd3c/d": 50,
+"Lv2": 30,
+"Dd2a": 1,
+}
+
+BOARD_SIZE = 15
 
 nowBoard = [[2,0,2,2,2,1,0,0],
             [0,1,0,0,1,0,0,0],
@@ -50,6 +66,11 @@ nowBoard = [[2,0,2,2,2,1,0,0],
             [0,0,1,0,2,2,2,1],
             [0,1,0,1,1,2,0,0],
             [0,0,0,2,0,0,0,0]]
+
+emptyBoard = np.zeros((15, 15))
+emptyBoard[7][7] = 1
+emptyBoard[7][8] = 2
+emptyBoard[6][5] = 2
 
 
 
@@ -451,8 +472,87 @@ def eval(node):
                             if (i+5==BOARD_SIZE or j+5==BOARD_SIZE or (i+5<BOARD_SIZE and j+5<BOARD_SIZE and nowBoard[i+5][j+5]==opside)):
                                 newshape = [[i,j], "Dd3c/d", 3, ismyside]
                                 shapes.append(newshape)
-
-
+                # Lv2, Dd2a ___oo___, xoo___ / ___oox
+                # Lv2, Dd2a horizontal
+                if nowBoard[i][j]==myside and j+1<BOARD_SIZE and nowBoard[i][j+1]==myside:
+                    # Lv2
+                    if j>0 and nowBoard[i][j-1]==EMPTY and j+2<BOARD_SIZE and nowBoard[i][j+2]==EMPTY:
+                        if (j-2>=0 and nowBoard[i][j-2]==EMPTY) or (j+3<BOARD_SIZE and nowBoard[i][j+3]==EMPTY):
+                            newshape = [[i,j], "Lv2", 0, ismyside]
+                            shapes.append(newshape)
+                    # Dd2a
+                    isDd2a = False
+                    if j==0 and j+4<BOARD_SIZE and nowBoard[i][j+2]==EMPTY and nowBoard[i][j+3]==EMPTY and nowBoard[i][j+4]==EMPTY:
+                        isDd2a = True
+                    if j+2==BOARD_SIZE and j-3>=0 and nowBoard[i][j-1]==EMPTY and nowBoard[i][j-2]==EMPTY and nowBoard[i][j-3]==EMPTY:
+                        isDd2a = True
+                    if j>0 and nowBoard[i][j-1]==opside and j+4<BOARD_SIZE and nowBoard[i][j+2]==EMPTY and nowBoard[i][j+3]==EMPTY and nowBoard[i][j+4]==EMPTY:
+                        isDd2a = True
+                    if j+2<BOARD_SIZE and nowBoard[i][j+2]==opside and j-3>=0 and nowBoard[i][j-1]==EMPTY and nowBoard[i][j-2]==EMPTY and nowBoard[i][j-3]==EMPTY:
+                        isDd2a = True
+                    if isDd2a:
+                        newshape = [[i,j], "Dd2a", 0, ismyside]
+                        shapes.append(newshape)
+                # Lv2, Dd2a vertical
+                if nowBoard[i][j]==myside and i+1<BOARD_SIZE and nowBoard[i+1][j]==myside:
+                    # Lv2
+                    if i>0 and nowBoard[i-1][j]==EMPTY and i+2<BOARD_SIZE and nowBoard[i+2][j]==EMPTY:
+                        if (i-2>=0 and nowBoard[i-2][j]==EMPTY) or (i+3<BOARD_SIZE and nowBoard[i+3][j]==EMPTY):
+                            newshape = [[i,j], "Lv2", 1, ismyside]
+                            shapes.append(newshape)
+                    # Dd2a
+                    isDd2a = False
+                    if i==0 and i+4<BOARD_SIZE and nowBoard[i+2][j]==EMPTY and nowBoard[i+3][j]==EMPTY and nowBoard[i+4][j]==EMPTY:
+                        isDd2a = True
+                    if i+2==BOARD_SIZE and i-3>=0 and nowBoard[i-1][j]==EMPTY and nowBoard[i-2][j]==EMPTY and nowBoard[i-3][j]==EMPTY:
+                        isDd2a = True
+                    if i>0 and nowBoard[i-1][j]==opside and i+4<BOARD_SIZE and nowBoard[i+2][j]==EMPTY and nowBoard[i+3][j]==EMPTY and nowBoard[i+4][j]==EMPTY:
+                        isDd2a = True
+                    if i+2<BOARD_SIZE and nowBoard[i+2][j]==opside and i-3>=0 and nowBoard[i-1][j]==EMPTY and nowBoard[i-2][j]==EMPTY and nowBoard[i-3][j]==EMPTY:
+                        isDd2a = True
+                    if isDd2a:
+                        newshape = [[i,j], "Dd2a", 1, ismyside]
+                        shapes.append(newshape)
+                # Lv2, Dd2a upperright
+                if nowBoard[i][j]==myside and i-1>=0 and j+1<BOARD_SIZE and nowBoard[i-1][j+1]==myside:
+                    # Lv2
+                    if i+1<BOARD_SIZE and j-1>=0 and nowBoard[i+1][j-1]==EMPTY and i-2>=0 and j+2<BOARD_SIZE and nowBoard[i-2][j+2]==EMPTY:
+                        if (i+2<BOARD_SIZE and j-2>=0 and nowBoard[i+2][j-2]==EMPTY) or (i-3>=0 and j+3<BOARD_SIZE and nowBoard[i-3][j+3]==EMPTY):
+                            newshape = [[i,j], "Lv2", 2, ismyside]
+                            shapes.append(newshape)
+                    # Dd2a
+                    isDd2a = False
+                    if (i+1==BOARD_SIZE or j==0) and i-4>=0 and j+4<BOARD_SIZE and nowBoard[i-2][j+2]==EMPTY and nowBoard[i-3][j+3]==EMPTY and nowBoard[i-4][j+4]==EMPTY:
+                        isDd2a = True
+                    if (i==0 or j+1==BOARD_SIZE) and i+3<BOARD_SIZE and j-3>=0 and nowBoard[i+1][j-1]==EMPTY and nowBoard[i+2][j-2]==EMPTY and nowBoard[i+3][j-3]==EMPTY:
+                        isDd2a = True
+                    if (i+1<BOARD_SIZE and j-1>=0) and nowBoard[i+1][j-1]==opside and i-4>=0 and j+4<BOARD_SIZE and nowBoard[i-2][j+2]==EMPTY and nowBoard[i-3][j+3]==EMPTY and nowBoard[i-4][j+4]==EMPTY:
+                        isDd2a = True
+                    if (i-1>=0 and j+1<BOARD_SIZE) and nowBoard[i-2][i+2]==opside and i+3<BOARD_SIZE and j-3>=0 and nowBoard[i+1][j-1]==EMPTY and nowBoard[i+2][j-2]==EMPTY and nowBoard[i+3][j-3]==EMPTY:
+                        isDd2a = True
+                    if isDd2a:
+                        newshape = [[i,j], "Dd2a", 2, ismyside]
+                        shapes.append(newshape)
+                # Lv2, Dd2a downright
+                if nowBoard[i][j]==myside and i+1<BOARD_SIZE and j+1<BOARD_SIZE and nowBoard[i+1][j+1]==myside:
+                    # Lv2
+                    if i-1>=0 and j-1>=0 and nowBoard[i-1][j-1]==EMPTY and i+2<BOARD_SIZE and j+2<BOARD_SIZE and nowBoard[i+2][j+2]==EMPTY:
+                        if (i-2>=0 and j-2>=0 and nowBoard[i-2][j-2]==EMPTY) or (i+3<BOARD_SIZE and j+3<BOARD_SIZE and nowBoard[i+3][j+3]==EMPTY):
+                            newshape = [[i,j], "Lv2", 3, ismyside]
+                            shapes.append(newshape)
+                    # Dd2a
+                    isDd2a = False
+                    if (i==0 or j==0) and i+4<BOARD_SIZE and j+4<BOARD_SIZE and nowBoard[i+2][j+2]==EMPTY and nowBoard[i+3][j+3]==EMPTY and nowBoard[i+4][j+4]==EMPTY:
+                        isDd2a = True
+                    if (i+2==BOARD_SIZE or j+2==BOARD_SIZE) and i-3>=0 and j-3>=0 and nowBoard[i-1][j-1]==EMPTY and nowBoard[i-2][j-2]==EMPTY and nowBoard[i-3][j-3]==EMPTY:
+                        isDd2a = True
+                    if (i-1>=0 and j-1>=0) and nowBoard[i-1][j-1]==opside and i+4<BOARD_SIZE and j+4<BOARD_SIZE and nowBoard[i+2][j+2]==EMPTY and nowBoard[i+3][j+3]==EMPTY and nowBoard[i+4][j+4]==EMPTY:
+                        isDd2a = True
+                    if (i+2<BOARD_SIZE and j+2<BOARD_SIZE) and nowBoard[i+2][j+2]==opside and i-3>=0 and j-3>=0 and nowBoard[i-1][j-2]==EMPTY and nowBoard[i-2][j-2]==EMPTY and nowBoard[i-3][j-3]==EMPTY:
+                        isDd2a = True
+                    if isDd2a:
+                        newshape = [[i,j], "Dd2a", 3, ismyside]
+                        shapes.append(newshape)
 
 
 
@@ -464,21 +564,14 @@ def eval(node):
         eval_value = 0
 
 
-    print(shapes)
+    # print(shapes)
     for s in shapes:
         if s[3]:
-            eval_value += value[s[1]]
+            eval_value += myvalue[s[1]]
         elif not s[3]:
-            eval_value -= value[s[1]]
-    for i in range(BOARD_SIZE):
-        print(nowBoard[i])
-
-
-    for s in shapes:
-        if s[3]:
-            eval_value += value[s[1]]
-        elif not s[3]:
-            eval_value -= value[s[1]]
+            eval_value -= opvalue[s[1]]
+    # for i in range(BOARD_SIZE):
+        # print(nowBoard[i])
     return eval_value
 
 def addChildren(node, depth, maxPlayer):
@@ -486,9 +579,8 @@ def addChildren(node, depth, maxPlayer):
         # if node.parent.move[0] == 1:
         node.value = eval(node)
         return node
-    emptyBoard = np.zeros((BOARD_SIZE, BOARD_SIZE))
-    emptyPos = coord[(emptyBoard == node.board)]
     # print(emptyPos)
+    emptyPos = prune(node)
     for pos in emptyPos:
         # print(depth)
         # print(pos)
@@ -526,13 +618,54 @@ def alphabeta(node, depth, alpha, beta, maxPlayer):
                 break
         return v
 
+def prune(node):
+    myBoard = np.zeros((BOARD_SIZE, BOARD_SIZE))
+    myBoard.fill(1)
+    myPos = coord[(myBoard == node.board)]
+    myx = [i[0] for i in myPos]
+    myy = [i[1] for i in myPos]
+    opBoard = np.zeros((BOARD_SIZE, BOARD_SIZE))
+    opBoard.fill(2)
+    opPos = coord[(opBoard == node.board)]
+    opx = [i[0] for i in opPos]
+    opy = [i[1] for i in opPos]
+    minx, miny, maxx, maxy = min(myx+opx), min(myy+opy), max(myx+opx), max(myy+opy)
+    if minx >= 3:
+        minx = minx - 3
+    else:
+        minx = 0
+    if miny >= 3:
+        miny = miny -3
+    else:
+        miny = 0
+    if maxx < BOARD_SIZE - 3:
+        maxx = maxx + 3
+    else:
+        maxx = BOARD_SIZE - 1
+    if maxy < BOARD_SIZE - 3:
+        maxy = maxy + 3
+    else:
+        maxy = BOARD_SIZE - 1
+    InRange = lambda pos: (pos[0]>=minx and pos[0]<=maxx and pos[1]>=miny and pos[1]<=maxy)
+    emptyBoard = np.zeros((BOARD_SIZE, BOARD_SIZE))
+    emptyPos = coord[(emptyBoard == node.board)]
+    emptyPos = list(filter(InRange, emptyPos))
+    return emptyPos
+
 def decision(node):
-    node = addChildren(node, 2, True)
-    alphabeta(node, 2, -1000000000, 1000000000, True)
+    emptyPos = prune(node)
+    depth = 1
+    if len(emptyPos) <= 50:
+        depth = 2
+    if len(emptyPos) <= 15:
+        depth = 3
+    node = addChildren(node, depth, True)
+    alphabeta(node, depth, -1000000000, 1000000000, True)
     maxmovevalue = max([i.value for i in node.children])
     for child in node.children:
         if child.value == maxmovevalue:
             maxmove = child.move
+    print(depth)
     return maxmove
 
 # node1 = Node()
@@ -572,6 +705,7 @@ def decision(node):
 
 testnode = Node()
 # testnode.board = testboard
-testnode.board = nowBoard
+# testnode.board = nowBoard
+testnode.board = emptyBoard
 # eval(testnode)
 print("Best move:" + str(decision(testnode)))
