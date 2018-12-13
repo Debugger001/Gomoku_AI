@@ -21,7 +21,8 @@ myvalue_1 = {
 "Lv3": 300,
 "Dd3a0": 20,
 "Dd3a1": 20,
-"Dd3b": 20,
+"Dd3b_safe": 20,
+"Dd3b_dang": 20,
 "Dd3c/d": 20,
 "Lv2": 10,
 "Dd2a": 1,
@@ -35,7 +36,8 @@ opvalue_1 = {
 "Lv3": 10000,
 "Dd3a0": 100,
 "Dd3a1": 100,
-"Dd3b": 100,
+"Dd3b_safe": 100,
+"Dd3b_dang": 10000,
 "Dd3c/d": 100,
 "Lv2": 100,
 "Dd2a": 10,
@@ -401,68 +403,68 @@ class AI:
                             if j>0 and nowBoard[i][j+3]==EMPTY and nowBoard[i][j+4]==EMPTY:
                                 if nowBoard[i][j-1]==opside:
                                     newshape = [[i,j], "Dd3a0", 0, ismyside]
-                                    if ismyside:
-                                        shapedict[str(i)+' '+str(j)].append("Dd3a0")
-                                        shapedict[str(i)+' '+str(j+1)].append("Dd3a0")
-                                        shapedict[str(i)+' '+str(j+2)].append("Dd3a0")
+                                    # if ismyside:
+                                    #     shapedict[str(i)+' '+str(j)].append("Dd3a0")
+                                    #     shapedict[str(i)+' '+str(j+1)].append("Dd3a0")
+                                    #     shapedict[str(i)+' '+str(j+2)].append("Dd3a0")
                                     shapes.append(newshape)
                             if j==0 and nowBoard[i][j+3]==EMPTY and nowBoard[i][j+4]==EMPTY:
                                 newshape = [[i,j], "Dd3a0", 0, ismyside]
-                                if ismyside:
-                                    shapedict[str(i)+' '+str(j)].append("Dd3a0")
-                                    shapedict[str(i)+' '+str(j+1)].append("Dd3a0")
-                                    shapedict[str(i)+' '+str(j+2)].append("Dd3a0")
+                                # if ismyside:
+                                #     shapedict[str(i)+' '+str(j)].append("Dd3a0")
+                                #     shapedict[str(i)+' '+str(j+1)].append("Dd3a0")
+                                #     shapedict[str(i)+' '+str(j+2)].append("Dd3a0")
                                 shapes.append(newshape)
                     if j+4<BOARD_SIZE and nowBoard[i][j]==EMPTY:
                         if nowBoard[i][j+1]==EMPTY and nowBoard[i][j+2]==myside and nowBoard[i][j+3]==myside and nowBoard[i][j+4]==myside:
                             if j+5==BOARD_SIZE:
                                 newshape = [[i,j+2], "Dd3a1", 0, ismyside]
-                                if ismyside:
-                                    shapedict[str(i)+' '+str(j+2)].append("Dd3a1")
-                                    shapedict[str(i)+' '+str(j+3)].append("Dd3a1")
-                                    shapedict[str(i)+' '+str(j+4)].append("Dd3a1")
+                                # if ismyside:
+                                #     shapedict[str(i)+' '+str(j+2)].append("Dd3a1")
+                                #     shapedict[str(i)+' '+str(j+3)].append("Dd3a1")
+                                #     shapedict[str(i)+' '+str(j+4)].append("Dd3a1")
                                 shapes.append(newshape)
                             if j+5<BOARD_SIZE:
                                 if nowBoard[i][j+5]==opside:
                                     newshape = [[i,j+2], "Dd3a1", 0, ismyside]
-                                    if ismyside:
-                                        shapedict[str(i)+' '+str(j+2)].append("Dd3a1")
-                                        shapedict[str(i)+' '+str(j+3)].append("Dd3a1")
-                                        shapedict[str(i)+' '+str(j+4)].append("Dd3a1")
+                                    # if ismyside:
+                                    #     shapedict[str(i)+' '+str(j+2)].append("Dd3a1")
+                                    #     shapedict[str(i)+' '+str(j+3)].append("Dd3a1")
+                                    #     shapedict[str(i)+' '+str(j+4)].append("Dd3a1")
                                     shapes.append(newshape)
                     # Dd3a vertical
                     if i+4<BOARD_SIZE and nowBoard[i][j]==myside and nowBoard[i+1][j]==myside and nowBoard[i+2][j]==myside:
                         if i>0 and nowBoard[i+3][j]==EMPTY and nowBoard[i+4][j]==EMPTY:
                             if nowBoard[i-1][j]==opside:
                                 newshape = [[i,j], "Dd3a0", 1, ismyside]
-                                if ismyside:
-                                    shapedict[str(i)+' '+str(j)].append("Dd3a0")
-                                    shapedict[str(i+1)+' '+str(j)].append("Dd3a0")
-                                    shapedict[str(i+2)+' '+str(j)].append("Dd3a0")
+                                # if ismyside:
+                                #     shapedict[str(i)+' '+str(j)].append("Dd3a0")
+                                #     shapedict[str(i+1)+' '+str(j)].append("Dd3a0")
+                                #     shapedict[str(i+2)+' '+str(j)].append("Dd3a0")
                                 shapes.append(newshape)
                         if i==0 and nowBoard[i+3][j]==EMPTY and nowBoard[i+4][j]==EMPTY:
                             newshape = [[i,j], "Dd3a0", 1, ismyside]
-                            if ismyside:
-                                shapedict[str(i)+' '+str(j)].append("Dd3a0")
-                                shapedict[str(i+1)+' '+str(j)].append("Dd3a0")
-                                shapedict[str(i+2)+' '+str(j)].append("Dd3a0")
+                            # if ismyside:
+                            #     shapedict[str(i)+' '+str(j)].append("Dd3a0")
+                            #     shapedict[str(i+1)+' '+str(j)].append("Dd3a0")
+                            #     shapedict[str(i+2)+' '+str(j)].append("Dd3a0")
                             shapes.append(newshape)
                     if i+4<BOARD_SIZE and nowBoard[i][j]==EMPTY:
                         if nowBoard[i+1][j]==EMPTY and nowBoard[i+2][j]==myside and nowBoard[i+3][j]==myside and nowBoard[i+4][j]==myside:
                             if j+5==BOARD_SIZE:
                                 newshape = [[i+2,j], "Dd3a1", 1, ismyside]
-                                if ismyside:
-                                    shapedict[str(i+2)+' '+str(j)].append("Dd3a1")
-                                    shapedict[str(i+3)+' '+str(j)].append("Dd3a1")
-                                    shapedict[str(i+4)+' '+str(j)].append("Dd3a1")
+                                # if ismyside:
+                                #     shapedict[str(i+2)+' '+str(j)].append("Dd3a1")
+                                #     shapedict[str(i+3)+' '+str(j)].append("Dd3a1")
+                                #     shapedict[str(i+4)+' '+str(j)].append("Dd3a1")
                                 shapes.append(newshape)
                             if i+5<BOARD_SIZE:
                                 if nowBoard[i+5][j]==opside:
                                     newshape = [[i+2,j], "Dd3a1", 1, ismyside]
-                                    if ismyside:
-                                        shapedict[str(i+2)+' '+str(j)].append("Dd3a1")
-                                        shapedict[str(i+3)+' '+str(j)].append("Dd3a1")
-                                        shapedict[str(i+4)+' '+str(j)].append("Dd3a1")
+                                    # if ismyside:
+                                    #     shapedict[str(i+2)+' '+str(j)].append("Dd3a1")
+                                    #     shapedict[str(i+3)+' '+str(j)].append("Dd3a1")
+                                    #     shapedict[str(i+4)+' '+str(j)].append("Dd3a1")
                                     shapes.append(newshape)
                     # Dd3a upperright
                     if i-4>=0 and j+4<BOARD_SIZE and nowBoard[i][j]==myside:
@@ -470,41 +472,41 @@ class AI:
                             if i+1<BOARD_SIZE and j-1>=0:
                                 if nowBoard[i+1][j-1]==opside:
                                     newshape = [[i,j], "Dd3a0", 2, ismyside]
-                                    if ismyside:
-                                        shapedict[str(i)+' '+str(j)].append("Dd3a0")
-                                        shapedict[str(i-1)+' '+str(j+1)].append("Dd3a0")
-                                        shapedict[str(i-2)+' '+str(j+2)].append("Dd3a0")
+                                    # if ismyside:
+                                    #     shapedict[str(i)+' '+str(j)].append("Dd3a0")
+                                    #     shapedict[str(i-1)+' '+str(j+1)].append("Dd3a0")
+                                    #     shapedict[str(i-2)+' '+str(j+2)].append("Dd3a0")
                                     shapes.append(newshape)
                             if j-1<0:
                                 newshape = [[i,j], "Dd3a0", 2, ismyside]
-                                if ismyside:
-                                    shapedict[str(i)+' '+str(j)].append("Dd3a0")
-                                    shapedict[str(i-1)+' '+str(j+1)].append("Dd3a0")
-                                    shapedict[str(i-2)+' '+str(j+2)].append("Dd3a0")
+                                # if ismyside:
+                                #     shapedict[str(i)+' '+str(j)].append("Dd3a0")
+                                #     shapedict[str(i-1)+' '+str(j+1)].append("Dd3a0")
+                                #     shapedict[str(i-2)+' '+str(j+2)].append("Dd3a0")
                                 shapes.append(newshape)
                             if i+1==BOARD_SIZE:
                                 newshape = [[i,j], "Dd3a0", 2, ismyside]
-                                if ismyside:
-                                    shapedict[str(i)+' '+str(j)].append("Dd3a0")
-                                    shapedict[str(i-1)+' '+str(j+1)].append("Dd3a0")
-                                    shapedict[str(i-2)+' '+str(j+2)].append("Dd3a0")
+                                # if ismyside:
+                                #     shapedict[str(i)+' '+str(j)].append("Dd3a0")
+                                #     shapedict[str(i-1)+' '+str(j+1)].append("Dd3a0")
+                                #     shapedict[str(i-2)+' '+str(j+2)].append("Dd3a0")
                                 shapes.append(newshape)
                     if i-4>=0 and j+4<BOARD_SIZE and nowBoard[i][j]==EMPTY:
                         if nowBoard[i-1][j+1]==EMPTY and nowBoard[i-2][j+2]==myside and nowBoard[i-3][j+3]==myside and nowBoard[i-4][j+4]==myside:
                             if i-5>=0 and j+5<BOARD_SIZE:
                                 if nowBoard[i-5][j+5]==opside:
                                     newshape = [[i-2,j+2], "Dd3a1", 2, ismyside]
-                                    if ismyside:
-                                        shapedict[str(i-2)+' '+str(j+2)].append("Dd3a1")
-                                        shapedict[str(i-3)+' '+str(j+3)].append("Dd3a1")
-                                        shapedict[str(i-4)+' '+str(j+4)].append("Dd3a1")
+                                    # if ismyside:
+                                    #     shapedict[str(i-2)+' '+str(j+2)].append("Dd3a1")
+                                    #     shapedict[str(i-3)+' '+str(j+3)].append("Dd3a1")
+                                    #     shapedict[str(i-4)+' '+str(j+4)].append("Dd3a1")
                                     shapes.append(newshape)
                             if i-5<0 or j+5==BOARD_SIZE:
                                 newshape = [[i-2,j+2], "Dd3a1", 2, ismyside]
-                                if ismyside:
-                                    shapedict[str(i-2)+' '+str(j+2)].append("Dd3a1")
-                                    shapedict[str(i-3)+' '+str(j+3)].append("Dd3a1")
-                                    shapedict[str(i-4)+' '+str(j+4)].append("Dd3a1")
+                                # if ismyside:
+                                #     shapedict[str(i-2)+' '+str(j+2)].append("Dd3a1")
+                                #     shapedict[str(i-3)+' '+str(j+3)].append("Dd3a1")
+                                #     shapedict[str(i-4)+' '+str(j+4)].append("Dd3a1")
                                 shapes.append(newshape)
                     # Dd3a downright
                     if i+4<BOARD_SIZE and j+4<BOARD_SIZE and nowBoard[i][j]==myside:
@@ -512,34 +514,34 @@ class AI:
                             if i-1>=0 and j-1>=0:
                                 if nowBoard[i-1][j-1]==opside:
                                     newshape = [[i,j], "Dd3a0", 3, ismyside]
-                                    if ismyside:
-                                        shapedict[str(i)+' '+str(j)].append("Dd3a0")
-                                        shapedict[str(i+1)+' '+str(j+1)].append("Dd3a0")
-                                        shapedict[str(i+2)+' '+str(j+2)].append("Dd3a0")
+                                    # if ismyside:
+                                    #     shapedict[str(i)+' '+str(j)].append("Dd3a0")
+                                    #     shapedict[str(i+1)+' '+str(j+1)].append("Dd3a0")
+                                    #     shapedict[str(i+2)+' '+str(j+2)].append("Dd3a0")
                                     shapes.append(newshape)
                             if i-1<0 or j-1<0:
                                 newshape = [[i,j], "Dd3a0", 3, ismyside]
-                                if ismyside:
-                                    shapedict[str(i)+' '+str(j)].append("Dd3a0")
-                                    shapedict[str(i+1)+' '+str(j+1)].append("Dd3a0")
-                                    shapedict[str(i+2)+' '+str(j+2)].append("Dd3a0")
+                                # if ismyside:
+                                #     shapedict[str(i)+' '+str(j)].append("Dd3a0")
+                                #     shapedict[str(i+1)+' '+str(j+1)].append("Dd3a0")
+                                #     shapedict[str(i+2)+' '+str(j+2)].append("Dd3a0")
                                 shapes.append(newshape)
                     if i+4<BOARD_SIZE and j+4<BOARD_SIZE and nowBoard[i][j]==EMPTY:
                         if nowBoard[i+1][j+1]==EMPTY and nowBoard[i+2][j+2]==myside and nowBoard[i+3][j+3]==myside and nowBoard[i+4][j+4]==myside:
                             if i+5<BOARD_SIZE and j+5<BOARD_SIZE:
                                 if nowBoard[i+5][j+5]==opside:
                                     newshape = [[i+2,j+2], "Dd3a1", 3, ismyside]
-                                    if ismyside:
-                                        shapedict[str(i+2)+' '+str(j+2)].append("Dd3a1")
-                                        shapedict[str(i+3)+' '+str(j+3)].append("Dd3a1")
-                                        shapedict[str(i+4)+' '+str(j+4)].append("Dd3a1")
+                                    # if ismyside:
+                                    #     shapedict[str(i+2)+' '+str(j+2)].append("Dd3a1")
+                                    #     shapedict[str(i+3)+' '+str(j+3)].append("Dd3a1")
+                                    #     shapedict[str(i+4)+' '+str(j+4)].append("Dd3a1")
                                     shapes.append(newshape)
                             if i+5==BOARD_SIZE or j+5==BOARD_SIZE:
                                 newshape = [[i+2,j+2], "Dd3a1", 3, ismyside]
-                                if ismyside:
-                                    shapedict[str(i+2)+' '+str(j+2)].append("Dd3a1")
-                                    shapedict[str(i+3)+' '+str(j+3)].append("Dd3a1")
-                                    shapedict[str(i+4)+' '+str(j+4)].append("Dd3a1")
+                                # if ismyside:
+                                #     shapedict[str(i+2)+' '+str(j+2)].append("Dd3a1")
+                                #     shapedict[str(i+3)+' '+str(j+3)].append("Dd3a1")
+                                #     shapedict[str(i+4)+' '+str(j+4)].append("Dd3a1")
                                 shapes.append(newshape)
                     # Dd3b _o_oo_ / _oo_o_
                     # Dd3b horizontal
@@ -558,8 +560,11 @@ class AI:
                                 if nowBoard[i][j+4]==EMPTY:
                                     emptycnt += 1
                             if emptycnt >= 1 and (not isrepeat):
-                                newshape = [[i,j], "Dd3b", 0, ismyside]
-                                if ismyside:
+                                if emptycnt == 1:
+                                    newshape = [[i,j], "Dd3b_safe", 0, ismyside]
+                                if emptycnt == 2:
+                                    newshape = [[i,j], "Dd3b_dang", 0, ismyside]
+                                if ismyside and emptycnt == 2:
                                     shapedict[str(i)+' '+str(j)].append("Dd3b")
                                     if nowBoard[i][j+1] == myside:
                                         shapedict[str(i)+' '+str(j+1)].append("Dd3b")
@@ -582,8 +587,11 @@ class AI:
                                 if nowBoard[i+4][j]==EMPTY:
                                     emptycnt += 1
                             if emptycnt >= 1 and (not isrepeat):
-                                newshape = [[i,j], "Dd3b", 1, ismyside]
-                                if ismyside:
+                                if emptycnt == 1:
+                                    newshape = [[i,j], "Dd3b_safe", 1, ismyside]
+                                if emptycnt == 2:
+                                    newshape = [[i,j], "Dd3b_dang", 1, ismyside]
+                                if ismyside and emptycnt == 2:
                                     shapedict[str(i)+' '+str(j)].append("Dd3b")
                                     if nowBoard[i+1][j] == myside:
                                         shapedict[str(i+1)+' '+str(j)].append("Dd3b")
@@ -606,8 +614,11 @@ class AI:
                                 if nowBoard[i-4][j+4]==EMPTY:
                                     emptycnt += 1
                             if emptycnt >= 1 and (not isrepeat):
-                                newshape = [[i,j], "Dd3b", 2, ismyside]
-                                if ismyside:
+                                if emptycnt == 1:
+                                    newshape = [[i,j], "Dd3b_safe", 2, ismyside]
+                                if emptycnt == 2:
+                                    newshape = [[i,j], "Dd3b_dang", 2, ismyside]
+                                if ismyside and emptycnt == 2:
                                     shapedict[str(i)+' '+str(j)].append("Dd3b")
                                     if nowBoard[i-1][j+1] == myside:
                                         shapedict[str(i-1)+' '+str(j+1)].append("Dd3b")
@@ -630,8 +641,11 @@ class AI:
                                 if nowBoard[i+4][j+4]==EMPTY:
                                     emptycnt += 1
                             if emptycnt >= 1 and (not isrepeat):
-                                newshape = [[i,j], "Dd3b", 3, ismyside]
-                                if ismyside:
+                                if emptycnt == 1:
+                                    newshape = [[i,j], "Dd3b_safe", 3, ismyside]
+                                if emptycnt == 2:
+                                    newshape = [[i,j], "Dd3b_dang", 3, ismyside]
+                                if ismyside and emptycnt == 2:
                                     shapedict[str(i)+' '+str(j)].append("Dd3b")
                                     if nowBoard[i+1][j+1] == myside:
                                         shapedict[str(i+1)+' '+str(j+1)].append("Dd3b")
@@ -653,7 +667,7 @@ class AI:
                                 if j>0 and j+5==BOARD_SIZE:
                                     if nowBoard[i][j-1]!=myside:
                                         newshape = [[i,j], "Dd3c/d", 0, ismyside]
-                                        if ismyside:
+                                        if ismyside and nowBoard[i][j-1] == EMPTY:
                                             shapedict[str(i)+' '+str(j)].append("Dd3c/d")
                                             if nowBoard[i][j+1] == myside:
                                                 shapedict[str(i)+' '+str(j+1)].append("Dd3c/d")
@@ -665,7 +679,7 @@ class AI:
                                 if j>0 and j+5<BOARD_SIZE:
                                     if nowBoard[i][j-1]!=myside and nowBoard[i][j+5]!=myside:
                                         newshape = [[i,j], "Dd3c/d", 0, ismyside]
-                                        if ismyside:
+                                        if ismyside and nowBoard[i][j-1] == EMPTY and nowBoard[i][j+5] == EMPTY:
                                             shapedict[str(i)+' '+str(j)].append("Dd3c/d")
                                             if nowBoard[i][j+1] == myside:
                                                 shapedict[str(i)+' '+str(j+1)].append("Dd3c/d")
@@ -677,7 +691,7 @@ class AI:
                                 if j==0 and j+5<BOARD_SIZE:
                                     if nowBoard[i][j+5]!=myside:
                                         newshape = [[i,j], "Dd3c/d", 0, ismyside]
-                                        if ismyside:
+                                        if ismyside and nowBoard[i][j+5] == EMPTY:
                                             shapedict[str(i)+' '+str(j)].append("Dd3c/d")
                                             if nowBoard[i][j+1] == myside:
                                                 shapedict[str(i)+' '+str(j+1)].append("Dd3c/d")
@@ -688,14 +702,14 @@ class AI:
                                         shapes.append(newshape)
                                 if j==0 and j+5==BOARD_SIZE:
                                     newshape = [[i,j], "Dd3c/d", 0, ismyside]
-                                    if ismyside:
-                                        shapedict[str(i)+' '+str(j)].append("Dd3c/d")
-                                        if nowBoard[i][j+1] == myside:
-                                            shapedict[str(i)+str(j+1)].append("Dd3c/d")
-                                        if nowBoard[i][j+2] == myside:
-                                            shapedict[str(i)+' '+str(j+2)].append("Dd3c/d")
-                                        if nowBoard[i][j+3] == myside:
-                                            shapedict[str(i)+' '+str(j+3)].append("Dd3c/d")
+                                    # if ismyside:
+                                    #     shapedict[str(i)+' '+str(j)].append("Dd3c/d")
+                                    #     if nowBoard[i][j+1] == myside:
+                                    #         shapedict[str(i)+str(j+1)].append("Dd3c/d")
+                                    #     if nowBoard[i][j+2] == myside:
+                                    #         shapedict[str(i)+' '+str(j+2)].append("Dd3c/d")
+                                    #     if nowBoard[i][j+3] == myside:
+                                    #         shapedict[str(i)+' '+str(j+3)].append("Dd3c/d")
                                     shapes.append(newshape)
                     # Dd3cd vertical
                     if nowBoard[i][j]==myside and i+4<BOARD_SIZE:
@@ -711,7 +725,7 @@ class AI:
                                 if i>0 and i+5==BOARD_SIZE:
                                     if nowBoard[i-1][j]!=myside:
                                         newshape = [[i,j], "Dd3c/d", 1, ismyside]
-                                        if ismyside:
+                                        if ismyside and nowBoard[i-1][j] == EMPTY:
                                             shapedict[str(i)+' '+str(j)].append("Dd3c/d")
                                             if nowBoard[i+1][j] == myside:
                                                 shapedict[str(i+1)+' '+str(j)].append("Dd3c/d")
@@ -723,7 +737,7 @@ class AI:
                                 if i>0 and i+5<BOARD_SIZE:
                                     if nowBoard[i-1][j]!=myside and nowBoard[i+5][j]!=myside:
                                         newshape = [[i,j], "Dd3c/d", 1, ismyside]
-                                        if ismyside:
+                                        if ismyside and nowBoard[i-1][j] == EMPTY and nowBoard[i+5][j] == EMPTY:
                                             shapedict[str(i)+' '+str(j)].append("Dd3c/d")
                                             if nowBoard[i+1][j] == myside:
                                                 shapedict[str(i+1)+' '+str(j)].append("Dd3c/d")
@@ -734,14 +748,14 @@ class AI:
                                         shapes.append(newshape)
                                 if i==0 and i+5==BOARD_SIZE:
                                     newshape = [[i,j], "Dd3c/d", 1, ismyside]
-                                    if ismyside:
-                                        shapedict[str(i)+' '+str(j)].append("Dd3c/d")
-                                        if nowBoard[i+1][j] == myside:
-                                            shapedict[str(i+1)+' '+str(j)].append("Dd3c/d")
-                                        if nowBoard[i+2][j] == myside:
-                                            shapedict[str(i+2)+' '+str(j)].append("Dd3c/d")
-                                        if nowBoard[i+3][j] == myside:
-                                            shapedict[str(i+3)+' '+str(j)].append("Dd3c/d")
+                                    # if ismyside:
+                                    #     shapedict[str(i)+' '+str(j)].append("Dd3c/d")
+                                    #     if nowBoard[i+1][j] == myside:
+                                    #         shapedict[str(i+1)+' '+str(j)].append("Dd3c/d")
+                                    #     if nowBoard[i+2][j] == myside:
+                                    #         shapedict[str(i+2)+' '+str(j)].append("Dd3c/d")
+                                    #     if nowBoard[i+3][j] == myside:
+                                    #         shapedict[str(i+3)+' '+str(j)].append("Dd3c/d")
                                     shapes.append(newshape)
                     # Dd3cd upperright
                     if nowBoard[i][j]==myside and i-4>=0 and j+4<BOARD_SIZE:
@@ -758,7 +772,7 @@ class AI:
                                     if i-5>=0 and j+5<BOARD_SIZE:
                                         if nowBoard[i-5][j+5]!=myside:
                                             newshape = [[i,j], "Dd3c/d", 2, ismyside]
-                                            if ismyside:
+                                            if ismyside and nowBoard[i-5][j+5] == EMPTY:
                                                 shapedict[str(i)+' '+str(j)].append("Dd3c/d")
                                                 if nowBoard[i-1][j+1] == myside:
                                                     shapedict[str(i-1)+' '+str(j+1)].append("Dd3c/d")
@@ -782,7 +796,7 @@ class AI:
                                     if nowBoard[i+1][j-1]!=myside:
                                         if i-5<0 or j+5==BOARD_SIZE:
                                             newshape = [[i,j], "Dd3c/d", 2, ismyside]
-                                            if ismyside:
+                                            if ismyside and nowBoard[i+1][j-1] == EMPTY:
                                                 shapedict[str(i)+' '+str(j)].append("Dd3c/d")
                                                 if nowBoard[i-1][j+1] == myside:
                                                     shapedict[str(i-1)+' '+str(j+1)].append("Dd3c/d")
@@ -794,7 +808,7 @@ class AI:
                                         if i-5>=0 and j+5<BOARD_SIZE:
                                             if nowBoard[i-5][j+5]!=myside:
                                                 newshape = [[i,j], "Dd3c/d", 2, ismyside]
-                                                if ismyside:
+                                                if ismyside and nowBoard[i-5][j+5] == EMPTY and nowBoard[i+1][j-1] == EMPTY:
                                                     shapedict[str(i)+' '+str(j)].append("Dd3c/d")
                                                     if nowBoard[i-1][j+1] == myside:
                                                         shapedict[str(i-1)+' '+str(j+1)].append("Dd3c/d")
@@ -818,7 +832,7 @@ class AI:
                                     if i+5<BOARD_SIZE and j+5<BOARD_SIZE:
                                         if nowBoard[i+5][j+5]!=myside:
                                             newshape = [[i,j], "Dd3c/d", 3, ismyside]
-                                            if ismyside:
+                                            if ismyside and nowBoard[i+5][j+5] == EMPTY:
                                                 shapedict[str(i)+' '+str(j)].append("Dd3c/d")
                                                 if nowBoard[i+1][j+1] == myside:
                                                     shapedict[str(i+1)+' '+str(j+1)].append("Dd3c/d")
@@ -843,7 +857,7 @@ class AI:
                                         if i+5<BOARD_SIZE and j+5<BOARD_SIZE:
                                             if nowBoard[i+5][j+5]!=myside:
                                                 newshape = [[i,j], "Dd3c/d", 3, ismyside]
-                                                if ismyside:
+                                                if ismyside and nowBoard[i-1][j-1] == EMPTY and nowBoard[i+5][j+5] == EMPTY:
                                                     shapedict[str(i)+' '+str(j)].append("Dd3c/d")
                                                     if nowBoard[i+1][j+1] == myside:
                                                         shapedict[str(i+1)+' '+str(j+1)].append("Dd3c/d")
