@@ -356,7 +356,7 @@ class AI:
                             if i+1<BOARD_SIZE and j>0 and i>4 and j+5<BOARD_SIZE and (nowBoard[i+1][j-1]!=myside and nowBoard[i-5][j+5]!=myside):
                                 isDd4bc = True
                         if isDd4bc:
-                            newshape = [[i,j], "Dd4b/c", 2, ismyside]
+                            newshape = [[i,j], "Dd4b/c", 3, ismyside]
                             shapes.append(newshape)
                     # Lv3 _ooo_
                     # Lv3 horizontal
@@ -544,7 +544,7 @@ class AI:
                     # Dd3b _o_oo_ / _oo_o_
                     # Dd3b horizontal
                     if nowBoard[i][j]==myside and j+3<BOARD_SIZE:
-                        if (nowBoard[i][j+1]==myside and nowBoard[i][j+2]==EMPTY) or (nowBoard[i][j+1]==EMPTY and nowBoard[i][j+2]==myside) and nowBoard[i][j+3]==myside:
+                        if ((nowBoard[i][j+1]==myside and nowBoard[i][j+2]==EMPTY) or (nowBoard[i][j+1]==EMPTY and nowBoard[i][j+2]==myside)) and nowBoard[i][j+3]==myside:
                             emptycnt = 0
                             isrepeat = False
                             if j-1>=0:
@@ -568,7 +568,7 @@ class AI:
                                 shapes.append(newshape)
                     # Dd3b vertical
                     if nowBoard[i][j]==myside and i+3<BOARD_SIZE:
-                        if (nowBoard[i+1][j]==myside and nowBoard[i+2][j]==EMPTY) or (nowBoard[i+1][j]==EMPTY and nowBoard[i+2][j]==myside) and nowBoard[i+3][j]==myside:
+                        if ((nowBoard[i+1][j]==myside and nowBoard[i+2][j]==EMPTY) or (nowBoard[i+1][j]==EMPTY and nowBoard[i+2][j]==myside)) and nowBoard[i+3][j]==myside:
                             emptycnt = 0
                             isrepeat = False
                             if i-1>=0:
@@ -592,7 +592,7 @@ class AI:
                                 shapes.append(newshape)
                     # Dd3b upperright
                     if nowBoard[i][j]==myside and i-3>=0 and j+3<BOARD_SIZE:
-                        if (nowBoard[i-1][j+1]==myside and nowBoard[i-2][j+2]==EMPTY) or (nowBoard[i-1][j+1]==EMPTY and nowBoard[i-2][j+2]==myside) and nowBoard[i-3][j+3]==myside:
+                        if ((nowBoard[i-1][j+1]==myside and nowBoard[i-2][j+2]==EMPTY) or (nowBoard[i-1][j+1]==EMPTY and nowBoard[i-2][j+2]==myside)) and nowBoard[i-3][j+3]==myside:
                             emptycnt = 0
                             isrepeat = False
                             if i+1<BOARD_SIZE and j-1>=0:
@@ -616,7 +616,7 @@ class AI:
                                 shapes.append(newshape)
                     # Dd3b downright
                     if nowBoard[i][j]==myside and i+3<BOARD_SIZE and j+3<BOARD_SIZE:
-                        if (nowBoard[i+1][j+1]==myside and nowBoard[i+2][j+2]==EMPTY) or (nowBoard[i+1][j+1]==EMPTY and nowBoard[i+2][j+2]==myside) and nowBoard[i+3][j+3]==myside:
+                        if ((nowBoard[i+1][j+1]==myside and nowBoard[i+2][j+2]==EMPTY) or (nowBoard[i+1][j+1]==EMPTY and nowBoard[i+2][j+2]==myside)) and nowBoard[i+3][j+3]==myside:
                             emptycnt = 0
                             isrepeat = False
                             if i-1<BOARD_SIZE and j-1>=0:
@@ -1142,7 +1142,7 @@ def loop(AI):
             AI.display()
         elif command == END:
             break
-        AI.display()
+        # AI.display()
 
 if __name__ == "__main__":
     # NOTE: don't change main function
