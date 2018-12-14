@@ -30,7 +30,7 @@ myvalue_1 = {
 
 opvalue_1 = {
 "FIVE": 10000000,
-"Lv4": 1000000,
+"Lv4": 1000200,
 "Dd4a": 1000000,
 "Dd4b/c": 1000000,
 "Lv3": 10000,
@@ -71,6 +71,8 @@ opvalue = {
 "Dd2a": 1,
 }
 
+isBlack = True
+
 coord = []
 for i in range(BOARD_SIZE):
     temp = []
@@ -78,8 +80,6 @@ for i in range(BOARD_SIZE):
         temp.append([i,j])
     coord.append(temp)
 coord = np.array(coord)
-
-isBlack = True
 
 class Node(object):
 
@@ -103,7 +103,6 @@ class Node(object):
 class AI:
     boardSize = BOARD_SIZE
     # TODO: add your own attributes here if you need any
-
 
     # Constructor
     def __init__(self):
@@ -183,6 +182,10 @@ class AI:
                                 if nowBoard[i][j+4] == EMPTY:
                                     newshape = [[i, j], "Lv4", 0, ismyside]
                                     shapes.append(newshape)
+                                    shapedict[str(i)+' '+str(j)].append("Lv40")
+                                    shapedict[str(i)+' '+str(j+1)].append("Lv40")
+                                    shapedict[str(i)+' '+str(j+2)].append("Lv40")
+                                    shapedict[str(i)+' '+str(j+3)].append("Lv40")
                         if MEcounter == 3:
                             isDd4a = False
                             if j>0 and j+4<BOARD_SIZE:
@@ -212,6 +215,10 @@ class AI:
                             if nowBoard[i-1][j] == EMPTY and nowBoard[i+4][j] == EMPTY:
                                 newshape = [[i, j], "Lv4", 1, ismyside]
                                 shapes.append(newshape)
+                                shapedict[str(i)+' '+str(j)].append("Lv40")
+                                shapedict[str(i)+' '+str(j+1)].append("Lv40")
+                                shapedict[str(i)+' '+str(j+2)].append("Lv40")
+                                shapedict[str(i)+' '+str(j+3)].append("Lv40")
                         if MEcounter == 3:
                             isDd4a = False
                             if i>0 and i+4<BOARD_SIZE:
@@ -1025,8 +1032,10 @@ class AI:
             for c in range(BOARD_SIZE):
                 if len(shapedict[str(r)+' '+str(c)]) > 1:
                     isForbbiden = True
-        if isForbbiden:
+        if isForbbiden and isBlack:
             eval_value = -10000000000
+        if isForbbiden and (not isBlack):
+            eval_value += 100000
         return eval_value
 
     def addChildren(self, node, depth, maxdepth, maxPlayer):
