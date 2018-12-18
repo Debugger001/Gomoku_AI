@@ -14,7 +14,7 @@ ME = 1
 OTHER = 2
 
 myvalue_1 = {
-"FIVE": 10000000,
+"FIVE": 1000000000,
 "Lv4": 100000,
 "Dd4a": 500,
 "Dd4b/c": 500,
@@ -30,9 +30,9 @@ myvalue_1 = {
 
 opvalue_1 = {
 "FIVE": 10000000,
-"Lv4": 1000200,
-"Dd4a": 1000000,
-"Dd4b/c": 1000000,
+"Lv4": 10002000,
+"Dd4a": 10000000,
+"Dd4b/c": 10000000,
 "Lv3": 10000,
 "Dd3a0": 100,
 "Dd3a1": 100,
@@ -317,23 +317,46 @@ class AI:
                                     MEcounter = 0
                                     break
                             isDd4bc = False
+                            isBlock = False
                             if MEcounter == 2:
-                                if (j==0 and nowBoard[i][j+5]!=myside) or (j+5==BOARD_SIZE and nowBoard[i][j-1]!=myside):
-                                    isDd4bc = True
-                                if (j>0 and j+5<BOARD_SIZE and (nowBoard[i][j-1]!=myside and nowBoard[i][j+5]!=myside)):
-                                    isDd4bc = True
+                                if j+5<BOARD_SIZE:
+                                    if j==0 and nowBoard[i][j+5]!=myside:
+                                        isDd4bc = True
+                                        if nowBoard[i][j+5]==opside:
+                                            isBlock = True
+                                if j>0:
+                                    if j+5==BOARD_SIZE and nowBoard[i][j-1]!=myside:
+                                        isDd4bc = True
+                                        if nowBoard[i][j-1]==opside:
+                                            isBlock = True
+                                if j>0 and j+5<BOARD_SIZE:
+                                    if nowBoard[i][j-1]!=myside and nowBoard[i][j+5]!=myside:
+                                        isDd4bc = True
+                                        if nowBoard[i][j+5]==opside or nowBoard[i][j-1]==opside:
+                                            isBlock = True
                             if isDd4bc:
                                 newshape = [[i,j], "Dd4b/c", 0, ismyside]
                                 shapes.append(newshape)
-                                shapedict[str(i)+' '+str(j)].append("Dd4b/c")
-                                if nowBoard[i][j+1] == myside:
-                                    shapedict[str(i)+' '+str(j+1)].append("Dd4b/c")
-                                if nowBoard[i][j+2] == myside:
-                                    shapedict[str(i)+' '+str(j+2)].append("Dd4b/c")
-                                if nowBoard[i][j+3] == myside:
-                                    shapedict[str(i)+' '+str(j+3)].append("Dd4b/c")
-                                if nowBoard[i][j+4] == myside:
-                                    shapedict[str(i)+' '+str(j+4)].append("Dd4b/c")
+                                if not isBlock:
+                                    shapedict[str(i)+' '+str(j)].append("Dd4b/c")
+                                    if nowBoard[i][j+1] == myside:
+                                        shapedict[str(i)+' '+str(j+1)].append("Dd4b/c")
+                                    if nowBoard[i][j+2] == myside:
+                                        shapedict[str(i)+' '+str(j+2)].append("Dd4b/c")
+                                    if nowBoard[i][j+3] == myside:
+                                        shapedict[str(i)+' '+str(j+3)].append("Dd4b/c")
+                                    if nowBoard[i][j+4] == myside:
+                                        shapedict[str(i)+' '+str(j+4)].append("Dd4b/c")
+                                if isBlock:
+                                    shapedict[str(i)+' '+str(j)].append("SAFE_Dd4b/c")
+                                    if nowBoard[i][j+1] == myside:
+                                        shapedict[str(i)+' '+str(j+1)].append("SAFE_Dd4b/c")
+                                    if nowBoard[i][j+2] == myside:
+                                        shapedict[str(i)+' '+str(j+2)].append("SAFE_Dd4b/c")
+                                    if nowBoard[i][j+3] == myside:
+                                        shapedict[str(i)+' '+str(j+3)].append("SAFE_Dd4b/c")
+                                    if nowBoard[i][j+4] == myside:
+                                        shapedict[str(i)+' '+str(j+4)].append("SAFE_Dd4b/c")
                     # Dd4b,c vertical
                     if i+4<BOARD_SIZE and nowBoard[i][j] == myside:
                         if nowBoard[i+4][j] == myside:
@@ -347,23 +370,46 @@ class AI:
                                     MEcounter = 0
                                     break
                             isDd4bc = False
+                            isBlock = False
                             if MEcounter == 2:
-                                if (i==0 and nowBoard[i+5][j]!=myside) or (i+5==BOARD_SIZE and nowBoard[i-1][j]!=myside):
-                                    isDd4bc = True
-                                if (i>0 and i+5<BOARD_SIZE and (nowBoard[i-1][j]!=myside and nowBoard[i+5][j]!=myside)):
-                                    isDd4bc = True
+                                if i+5<BOARD_SIZE:
+                                    if i==0 and nowBoard[i+5][j]!=myside:
+                                        isDd4bc = True
+                                        if nowBoard[i+5][j]==opside:
+                                            isBlock = True
+                                if i>0:
+                                    if i+5==BOARD_SIZE and nowBoard[i-1][j]!=myside:
+                                        isDd4bc = True
+                                        if nowBoard[i-1][j]==opside:
+                                            isBlock = True
+                                if i>0 and i+5<BOARD_SIZE:
+                                    if nowBoard[i-1][j]!=myside and nowBoard[i+5][j]!=myside:
+                                        isDd4bc = True
+                                        if nowBoard[i-1][j]==opside or nowBoard[i+5][j]==opside:
+                                            isBlock = True
                             if isDd4bc:
                                 newshape = [[i,j], "Dd4b/c", 1, ismyside]
                                 shapes.append(newshape)
-                                shapedict[str(i)+' '+str(j)].append("Dd4b/c")
-                                if nowBoard[i+1][j] == myside:
-                                    shapedict[str(i+1)+' '+str(j)].append("Dd4b/c")
-                                if nowBoard[i+2][j] == myside:
-                                    shapedict[str(i+2)+' '+str(j)].append("Dd4b/c")
-                                if nowBoard[i+3][j] == myside:
-                                    shapedict[str(i+3)+' '+str(j)].append("Dd4b/c")
-                                if nowBoard[i+4][j] == myside:
-                                    shapedict[str(i+4)+' '+str(j)].append("Dd4b/c")
+                                if not isBlock:
+                                    shapedict[str(i)+' '+str(j)].append("Dd4b/c")
+                                    if nowBoard[i+1][j] == myside:
+                                        shapedict[str(i+1)+' '+str(j)].append("Dd4b/c")
+                                    if nowBoard[i+2][j] == myside:
+                                        shapedict[str(i+2)+' '+str(j)].append("Dd4b/c")
+                                    if nowBoard[i+3][j] == myside:
+                                        shapedict[str(i+3)+' '+str(j)].append("Dd4b/c")
+                                    if nowBoard[i+4][j] == myside:
+                                        shapedict[str(i+4)+' '+str(j)].append("Dd4b/c")
+                                if isBlock:
+                                    shapedict[str(i)+' '+str(j)].append("SAFE_Dd4b/c")
+                                    if nowBoard[i+1][j] == myside:
+                                        shapedict[str(i+1)+' '+str(j)].append("SAFE_Dd4b/c")
+                                    if nowBoard[i+2][j] == myside:
+                                        shapedict[str(i+2)+' '+str(j)].append("SAFE_Dd4b/c")
+                                    if nowBoard[i+3][j] == myside:
+                                        shapedict[str(i+3)+' '+str(j)].append("SAFE_Dd4b/c")
+                                    if nowBoard[i+4][j] == myside:
+                                        shapedict[str(i+4)+' '+str(j)].append("SAFE_Dd4b/c")
                     # Dd4b,c upperright
                     if i-4>=0 and j+4<BOARD_SIZE and nowBoard[i][j] == myside:
                         if nowBoard[i-4][j+4] == myside:
@@ -378,12 +424,17 @@ class AI:
                                     break
                             isDd4bc = False
                             if MEcounter == 2:
-                                if (i+1==BOARD_SIZE or j==0) and (i==4 or j+5==BOARD_SIZE or (i>4 and j+5<BOARD_SIZE and nowBoard[i-5][j+5]!=myside)):
+                                if (i+1==BOARD_SIZE or j==0) and (i==4 or j+5==BOARD_SIZE):
                                     isDd4bc = True
-                                if (i==4 or j+5==BOARD_SIZE) and (i+1<BOARD_SIZE and j>0 and nowBoard[i+1][j-1]!=myside):
-                                    isDd4bc = True
-                                if (i+1<BOARD_SIZE and j>0 and i>4 and j+5<BOARD_SIZE) and (nowBoard[i+1][j-1]!=myside and nowBoard[i-5][j+5]!=myside):
-                                    isDd4bc = True
+                                if (i+1==BOARD_SIZE or j==0) and i>4 and j+5<BOARD_SIZE:
+                                    if nowBoard[i-5][j+5]!=myside:
+                                        isDd4bc = True
+                                if (i==4 or j+5==BOARD_SIZE) and i+1<BOARD_SIZE and j>0:
+                                    if nowBoard[i+1][j-1]!=myside:
+                                        isDd4bc = True
+                                if i+1<BOARD_SIZE and j>0 and i>4 and j+5<BOARD_SIZE:
+                                    if nowBoard[i+1][j-1]!=myside and nowBoard[i-5][j+5]!=myside:
+                                        isDd4bc = True
                             if isDd4bc:
                                 newshape = [[i,j], "Dd4b/c", 2, ismyside]
                                 shapes.append(newshape)
@@ -410,10 +461,15 @@ class AI:
                                     break
                             isDd4bc = False
                             if MEcounter == 2:
-                                if ((i==0 or j==0) and j+5<BOARD_SIZE and nowBoard[i-5][j+5]!=myside) or ((i-4==0 or j+5==BOARD_SIZE) and i+1<BOARD_SIZE and j-1>=0 and nowBoard[i+1][j-1]!=myside):
-                                    isDd4bc = True
-                                if i+1<BOARD_SIZE and j>0 and i>4 and j+5<BOARD_SIZE and (nowBoard[i+1][j-1]!=myside and nowBoard[i-5][j+5]!=myside):
-                                    isDd4bc = True
+                                if (i==0 or j==0) and j+5<BOARD_SIZE:
+                                    if nowBoard[i+5][j+5]!=myside:
+                                        isDd4bc = True
+                                if (i+5==BOARD_SIZE or j+5==BOARD_SIZE) and i-1>=0 and j-1>=0:
+                                    if nowBoard[i-1][j-1]!=myside:
+                                        isDd4bc = True
+                                if i>0 and j>0 and i+5<BOARD_SIZE and j+5<BOARD_SIZE:
+                                    if nowBoard[i-1][j-1]!=myside and nowBoard[i+5][j+5]!=myside:
+                                        isDd4bc = True
                             if isDd4bc:
                                 newshape = [[i,j], "Dd4b/c", 3, ismyside]
                                 shapes.append(newshape)
